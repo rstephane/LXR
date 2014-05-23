@@ -44,6 +44,21 @@
 #include "modulationNode.h"
 #include "TriggerOut.h"
 
+// -----------------------------
+// rstephane : pour random functions
+#include "valueShaper.h"
+
+// rstephane  ---------
+extern uint8_t maskType; // 0-16 for OTO effects
+extern uint8_t otoAmount; // 0-127 for OTO effects
+
+extern uint8_t freq; // for Alien Wah effect 0 - 127 -> 0.0 to 1.0
+extern uint8_t startphase; // 0.0 to 1.0
+extern uint8_t fb; // 0.0 1.0
+extern uint8_t delay; // 5 to 50 if possible!
+extern uint8_t AlienWahOnOff; // Set ALien FX ON or OFF 
+// end --------
+
 
 float ampSmoothValue = 0.1f;
 //---------------------------------------------------
@@ -265,9 +280,238 @@ void calcDrumVoiceSyncBlock(const uint8_t voiceNr, int16_t* buf, const uint8_t s
 #if (USE_FILTER_DRIVE == 0)
 	calcDistBlock(&voiceArray[voiceNr].distortion,buf,size);
 #endif
+
+	// -------------------------------------------------
+	//rstephane: OTO effect alike ;-)
+  	// works fine!
+  	if (maskType>0)
+		//(uint8_t maskType, int16_t* buf,const uint8_t size, uint8_t otoAmount)
+  		calcOTOFxBlock(maskType,buf, size, otoAmount);
+  	
+	// rstephane : DELAY
+	//if (maskType>0)
+	//calcDelayBlock(1500, buf, size);
+
+  		
+  	// rstephane: Alien Wah effect, 
+  	// to put it one day as very nice, with four parameters
+  	// works fine!
+  	//if (AlienWahOnOff>0)
+	//	calcAlienWahFxBlock(freq,startphase,fb,delay, buf,size);
+  	  	
+  	// rstephane : Moog Filter (not working correctly yet :-(
+  	// moog_perform(0,0.8,0.4, buf,size);
+  	
+  	// rstephane : 3 band EQ 
+  	//-----------------
+  	//calc3BandEqBlock(lowFreq, midFreq, highFreq, buf, size);
+  	//calc3BandEqBlock(880,5000, 24000, buf, size);
+  	
+
+	// ------------------------------------------------
+
 	//channel volume
 	bufferTool_addGain(buf,voiceArray[voiceNr].vol,size);
 }
 //---------------------------------------------------
 
+
+//---------------------------------------------------
+// rstephane : my functions
+//random all the parameters for voice 1 2 and 3
+//---------------------------------------------------
+
+void randomDrumVoice(const uint8_t voiceNr)
+{
+		uint8_t rndData;
+		//uint32_t rndDataTemp;
+		
+		// COARSE
+		rndData = GetRndValue127();
+		
+		//clear upper nibble
+		voiceArray[voiceNr].osc.midiFreq &= 0x00ff;
+		//set upper nibble
+		voiceArray[voiceNr].osc.midiFreq |= rndData << 8;
+		osc_recalcFreq(&voiceArray[voiceNr].osc);
+		
+		// OSC_WAVE_DRUM1:
+		rndData = GetRndValue6(); // 0-255 -> 0-5
+		voiceArray[voiceNr].osc.waveform = rndData;
+  
+		// CC2_FILTER_TYPE_3:
+		rndData = GetRndValue7();
+		voiceArray[voiceNr].filterType = rndData+1;
+				
+		// FILTER
+		rndData = GetRndValue127();
+		const float f = rndData/127.f;
+		//exponential full range freq
+		SVF_directSetFilterValue(&voiceArray[voiceNr].filter,valueShaperF2F(f,FILTER_SHAPER) );
+		// RESO
+		rndData = GetRndValue127();
+		SVF_setReso(&voiceArray[voiceNr].filter, rndData/127.f);
+
+		//VOL_SLOPE1:
+		rndData = GetRndValue127();
+		slopeEg2_setSlope(&voiceArray[voiceNr].oscVolEg,rndData);
+
+		// PITCH_SLOPE1:
+		rndData = GetRndValue127();
+		DecayEg_setSlope(&voiceArray[voiceNr].oscPitchEg,rndData);
+		
+		//OSC1_DIST:
+		rndData =  GetRndValue127();
+#if USE_FILTER_DRIVE
+		voiceArray[voiceNr].filter.drive = 0.5f + (rndData/127.f) *6;
+#else
+		setDistortionShape(&voiceArray[voiceNr].distortion,rndData);
+#endif		
+
+	// const uint8_t trackNr, uint8_t patternNr		
+	frontParser_updateTrackLeds(voiceNr, seq_activePattern);			
+}
+
+//---------------------------------------------------
+void randomDrumVoiceOSC(const uint8_t voiceNr)
+{
+		uint8_t rndData;
+		uint8_t rndDataTemp;
+		
+		
+		// COARSE
+		rndData = GetRndValue127();
+		//clear upper nibble
+		voiceArray[voiceNr].osc.midiFreq &= 0x00ff;
+		//set upper nibble
+		voiceArray[voiceNr].osc.midiFreq |= rndData << 8;
+		osc_recalcFreq(&voiceArray[voiceNr].osc);
+		
+		// FINE -63 + 63
+		rndData = GetRndValue127();
+		rndDataTemp=calcRange(rndData, -63 ,+63,0,127);
+		//clear lower nibble
+		voiceArray[voiceNr].osc.midiFreq &= 0xff00;
+		//set lower nibble
+		voiceArray[voiceNr].osc.midiFreq |= rndDataTemp;
+		osc_recalcFreq(&voiceArray[voiceNr].osc);
+	
+		// OSC_WAVE_DRUM1:
+		rndData = GetRndValue6(); // 0-255 -> 0-5
+		voiceArray[voiceNr].osc.waveform = rndData;
+  
+		//OSC1_DIST:
+		rndData =  GetRndValue127();
+#if USE_FILTER_DRIVE
+		voiceArray[voiceNr].filter.drive = 0.5f + (rndData/127.f) *6;
+#else
+		setDistortionShape(&voiceArray[voiceNr].distortion,rndData);
+#endif		
+
+	// const uint8_t trackNr, uint8_t patternNr		
+	frontParser_updateTrackLeds(voiceNr, seq_activePattern);			
+}
+//---------------------------------------------------
+void randomDrumVoiceFM(const uint8_t voiceNr)
+{
+		uint8_t rndData;
+		//uint32_t rndDataTemp;
+		
+		
+		// FMAMNT2:
+		rndData = GetRndValue127();
+		voiceArray[voiceNr].fmModAmount = rndData/127.f;
+	
+		// FMDTN2:
+		rndData = GetRndValue127();
+		//clear upper nibble
+		voiceArray[voiceNr].modOsc.midiFreq &= 0x00ff;
+		//set upper nibble
+		voiceArray[voiceNr].modOsc.midiFreq |= rndData << 8;
+		osc_recalcFreq(&voiceArray[voiceNr].modOsc);
+			
+		// MOD_WAVE_DRUM1 (FM):
+		rndData = GetRndValue7();
+		voiceArray[voiceNr].modOsc.waveform = rndData;
+		
+	// const uint8_t trackNr, uint8_t patternNr		
+	frontParser_updateTrackLeds(voiceNr, seq_activePattern);			
+}
+
+//---------------------------------------------------
+void randomDrumVoiceADSR(const uint8_t voiceNr)
+{
+	uint8_t rndData;
+	//VELOA2:
+	rndData = GetRndValue127();
+	slopeEg2_setAttack(&voiceArray[1].oscVolEg,rndData,AMP_EG_SYNC);
+	
+	//VELOD2:
+	rndData = GetRndValue127();
+	slopeEg2_setDecay(&voiceArray[1].oscVolEg,rndData,AMP_EG_SYNC);
+	
+	//PITCHD2:
+	rndData = GetRndValue127();
+	DecayEg_setDecay(&voiceArray[1].oscPitchEg,rndData);				
+						
+	
+	// const uint8_t trackNr, uint8_t patternNr		
+	frontParser_updateTrackLeds(voiceNr, seq_activePattern);			
+}
+
+//---------------------------------------------------
+void randomDrumVoiceCLICK(const uint8_t voiceNr)
+{
+		uint8_t rndData;
+		//uint32_t rndDataTemp;
+		
+		// CC2_TRANS1_WAVE:	0 - 14 
+	   	do {
+	        	rndData = GetRngValue();
+	        	rndData = rndData & 0x0000001F;
+	        } while ((rndData == 16) || (rndData == 15));
+		
+		voiceArray[voiceNr].transGen.waveform = rndData;
+		
+		// CC2_TRANS1_VOL:
+		rndData = GetRndValue127();
+		voiceArray[voiceNr].transGen.volume = rndData/127.f;
+		
+		// CC2_TRANS1_FREQ:
+		rndData = GetRndValue127();
+		voiceArray[voiceNr].transGen.pitch = 1.f + ((rndData/33.9f)-0.75f) ;// range about  0.25 to 4 => 1/4 to 1*4
+		
+	// const uint8_t trackNr, uint8_t patternNr		
+	frontParser_updateTrackLeds(voiceNr, seq_activePattern);			
+}		
+//---------------------------------------------------
+void randomDrumVoiceFILTER(const uint8_t voiceNr)
+{
+		uint8_t rndData;
+
+		// CC2_FILTER_TYPE:
+		rndData = GetRndValue7();
+		voiceArray[voiceNr].filterType = rndData+1;
+				
+		// FILTER
+		rndData = GetRndValue127();
+		const float f = rndData/127.f;
+		//exponential full range freq
+		SVF_directSetFilterValue(&voiceArray[voiceNr].filter,valueShaperF2F(f,FILTER_SHAPER) );
+		
+		// RESO
+		rndData = GetRndValue127();
+		SVF_setReso(&voiceArray[voiceNr].filter, rndData/127.f);
+
+		// FILTER DRIVE 
+		rndData = GetRndValue127();
+#if UNIT_GAIN_DRIVE
+		voiceArray[voiceNr].filter.drive = (rndData/127.f);
+#else
+		SVF_setDrive(&voiceArray[voiceNr].filter,rndData);
+#endif */
+
+	// const uint8_t trackNr, uint8_t patternNr		
+	frontParser_updateTrackLeds(voiceNr, seq_activePattern);			
+}	
 

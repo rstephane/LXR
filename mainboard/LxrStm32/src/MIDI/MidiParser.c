@@ -1314,56 +1314,56 @@ void midiParser_ccHandler(MidiMsg msg, uint8_t updateOriginalValue)
 				if(msg.data2>0)
 				{
 					// uint8_t VoiceNr, uint8_t msgdata2
-					seq_setRandomPatternFill(0, msg.data2);
+					seq_setRandomPatternFill(0);
 				}
 				break;	
 			case CC2_RANDOMFILL_PATTERN1:
 				if(msg.data2>0)
 				{
 					// uint8_t VoiceNr, uint8_t msgdata2
-					seq_setRandomPatternFill(1, msg.data2);				
+					seq_setRandomPatternFill(1);				
 				}
 				break;	
 			case CC2_RANDOMFILL_PATTERN2:
 				if(msg.data2>0)
 				{
 					// uint8_t VoiceNr, uint8_t msgdata2
-					seq_setRandomPatternFill(2, msg.data2);
+					seq_setRandomPatternFill(2);
 				}
 				break;	
 			case CC2_RANDOMFILL_PATTERN3:
 				if(msg.data2>0)
 				{
 					// uint8_t VoiceNr, uint8_t msgdata2
-					seq_setRandomPatternFill(3, msg.data2);
+					seq_setRandomPatternFill(3);
 				}
 				break;	
 			case CC2_RANDOMFILL_PATTERN4:
 				if(msg.data2>0)
 				{
 					// uint8_t VoiceNr, uint8_t msgdata2
-					seq_setRandomPatternFill(4, msg.data2);
+					seq_setRandomPatternFill(4);
 				}
 				break;	
 			case CC2_RANDOMFILL_PATTERN5:
 				if(msg.data2>0)
 				{
 					// uint8_t VoiceNr, uint8_t msgdata2
-					seq_setRandomPatternFill(5, msg.data2);
+					seq_setRandomPatternFill(5);
 				}
 				break;	
 			case CC2_RANDOMFILL_PATTERN6:
 				if(msg.data2>0)
 				{
 					// uint8_t VoiceNr, uint8_t msgdata2
-					seq_setRandomPatternFill(6, msg.data2);
+					seq_setRandomPatternFill(6);
 				}
 				break;	
 			case CC2_RANDOMFILL_PATTERN7:
 				if(msg.data2>0)
 				{
 					// uint8_t VoiceNr, uint8_t msgdata2
-					seq_setRandomPatternFill(7, msg.data2);
+					seq_setRandomPatternFill(7);
 				}
 				break;	
 

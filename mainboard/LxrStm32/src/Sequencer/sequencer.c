@@ -1649,7 +1649,7 @@ void seq_setPreRythmFill(uint8_t voiceNr, uint8_t msgdata2)
 }
 
 // rstephane : My RANDOM filled pattern
-void seq_setRandomPatternFill(uint8_t voiceNr, uint8_t msgdata2)
+void seq_setRandomPatternFill(uint8_t voiceNr)
 {
 	//uint8_t old_min,old_max,new_min,new_max;
 	uint8_t i;

@@ -39,6 +39,12 @@
 #include "modulationNode.h"
 #include "TriggerOut.h"
 
+
+// rstephane  ---------
+extern uint8_t maskType; // 0-16 for OTO effects
+extern uint8_t otoAmount; // 0-16 for OTO effects
+
+
 CymbalVoice cymbalVoice;
 //---------------------------------------------------
 void Cymbal_setPan(const uint8_t pan)
@@ -173,6 +179,10 @@ void Cymbal_calcSyncBlock(int16_t* buf, const uint8_t size)
 		//calc transient sample
 		transient_calcBlock(&cymbalVoice.transGen,mod,size);
 
+		//rstephane: OTO effect alike ;-)
+  		if (maskType>0)
+  			calcOTOFxBlock(maskType,buf, size,otoAmount);
+ 
 		uint8_t j;
 		if(cymbalVoice.volumeMod)
 		{
