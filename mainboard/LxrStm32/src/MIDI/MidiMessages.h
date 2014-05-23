@@ -387,6 +387,11 @@ enum
 	CC2_RND_VOICE6,
 	CC2_RND_VOICE7,
 	
+	CC2_RND_MASKTYPE1,  
+	CC2_RND_MASKTYPE2,  
+	CC2_RND_MASKTYPE3,
+ 
+	
 	CC2_LOOP, // my funtion LOOP is called 
 	CC2_DIVIDE, // my funtion DIVIDE is called 
 	CC2_OTO, // my funtion OTO is called 

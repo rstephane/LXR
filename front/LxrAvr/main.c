@@ -77,13 +77,13 @@ int main(void)
 #else
 	//print boot up message
 	lcd_home();
-	lcd_string_F(PSTR("Sonic Potions"));
+	lcd_string_F(PSTR("LXR ** ** **"));
 	//goto 2nd line
 	lcd_setcursor(0,2);
 	//lcd_string_F(PSTR("LXR Drums V"));
 	
 	// rstephane -----
-	lcd_string_F(PSTR("LXR Marimba"));
+	lcd_string_F(PSTR("Marimba V"));
 	
 	lcd_string(FIRMWARE_VERSION);
 #endif

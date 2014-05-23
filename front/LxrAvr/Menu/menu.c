@@ -200,6 +200,8 @@ const Name valueNames[NUM_NAMES] PROGMEM =
 		
 		// rstephane -----------------------------------------
 		{SHORT_RND, CAT_OSC, LONG_RND_VOICE}, // rstephane: TEXT_RND_VOICE
+		{SHORT_RND_MASKTYPE,CAT_OSC,LONG_RND_MASKTYPE},
+		
 		{SHORT_PREFILLED_PATTERN,CAT_PATTERN,	LONG_PREFILLED_PATTERN},// rstephane:  TEXT_PREFILLED_PATTERN
 		{SHORT_RANDOMFILL_PATTERN,CAT_PATTERN,	LONG_RANDOMFILL_PATTERN},// rstephane:  TEXT_RANDOMFILL_PATTERN
 		{SHORT_DIVIDE,	CAT_SEQUENCER,	LONG_DIVIDE},	// rstephane:  TEXT_DIVIDE
@@ -212,7 +214,8 @@ const Name valueNames[NUM_NAMES] PROGMEM =
 		{SHORT_ALIEN_FREQ,CAT_SEQUENCER,LONG_ALIEN_FREQ},
 		{SHORT_ALIEN_STARTPHASE,CAT_SEQUENCER,LONG_ALIEN_STARTPHASE},
 		{SHORT_ALIEN_FB,CAT_SEQUENCER,LONG_ALIEN_FB},	
-
+		
+		
 };
 
 //---------------------------------------------------------------
@@ -449,7 +452,8 @@ const enum Datatypes PROGMEM parameter_dtypes[NUM_PARAMS] = {
 	    /*PAR_MIDI_NOTE7*/		DTYPE_NOTE_NAME,
 	    
 	    
- 	    // ------------------------------------------------
+ 	    
+// ------------------------------------------------------------------------------------------
 	    // rstephane MY VALUES ADDED FOR RANDOM FUNCTION
 	    /*PAR_RND_VOICE1*/	DTYPE_ON_OFF,  // rstephane : random drum1 on/off
 	    /*PAR_RND_VOICE2*/	DTYPE_ON_OFF, 
@@ -457,8 +461,14 @@ const enum Datatypes PROGMEM parameter_dtypes[NUM_PARAMS] = {
 	    /*PAR_RND_VOICE4*/	DTYPE_ON_OFF, 
 	    /*PAR_RND_VOICE5*/	DTYPE_ON_OFF, 
 	    /*PAR_RND_VOICE6*/	DTYPE_ON_OFF, 
-	    /*PAR_RND_VOICE7*/	DTYPE_ON_OFF, 
-	    
+	    /*PAR_RND_VOICE7*/	DTYPE_ON_OFF,    
+		
+		// Random Type rstephane
+	/*PAR_RND_MASKTYPE1,*/ 		DTYPE_1B16,  
+	/*PAR_RND_MASKTYPE2,*/		DTYPE_1B16,  
+	/*PAR_RND_MASKTYPE3,*/		DTYPE_1B16,  
+ 
+ 
 	    /*PAR_LOOP*/	DTYPE_1B16,  // rstephane : loop 16 to 1 steps
 	    /*PAR_DIVIDE*/	DTYPE_1B16,  // rstephane : Starts 1 to 16 steps
 	   
@@ -489,7 +499,9 @@ const enum Datatypes PROGMEM parameter_dtypes[NUM_PARAMS] = {
 		/* PAR_ALIEN_STARTPHASE*/	DTYPE_0B127,
 		/* PAR_ALIEN_FB*/		DTYPE_0B127,
 
-	    // ------------------------------------------------	    
+		
+		
+  // --------------------------------------------------------------------------------	    
 	    
 	    
 	    

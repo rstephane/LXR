@@ -133,7 +133,8 @@ void drum_setPhase(const uint8_t phase, const uint8_t voiceNr);
 // ----------------------------------------------
 // rstephane : my functions
 //random all the parameters for voice 1 2 and 3
-void randomDrumVoice(const uint8_t voiceNr);  
+void randomDrumVoiceALL(const uint8_t voiceNr);  
+void randomDrumVoice(const uint8_t voiceNr, uint8_t randomType);  
 void randomDrumVoiceOSC(const uint8_t voiceNr);  
 void randomDrumVoiceFM(const uint8_t voiceNr);  
 void randomDrumVoiceCLICK(const uint8_t voiceNr);  

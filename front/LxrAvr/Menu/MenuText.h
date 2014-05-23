@@ -314,6 +314,8 @@ const char shortNames[][4] PROGMEM  =
 	
 	// rstephane ---------
 	{"rnd"}, // rstephane: RND VOice
+	{"typ"}, // Random Sound Generation type from 1 to 16
+
 	{"pat"}, // rstephane: PAT number 
 	{"rpf"}, // rstephane: RANDOM Pattern steps Fill
 	{"sta"}, // rstephane: start (divide effect) loop index
@@ -439,11 +441,13 @@ const char longNames[][16] PROGMEM =
 	
 	// rstephane ------- 
 	{"Random"}, // rstephane: RND VOice LONG text
-	{"FillPat"}, // rstephane: PRE Filled Pattern
-	{"RandPattFill"}, // rstephane: RANDOM Pattern steps Fill
-	{"StartLoop"}, // rstephane: DIVIDE LONG text
-	{"EndLoop"}, // rstephane: LOOP LONG text
+	{"RND Type"}, // Random Sound Generation type from 1 to 16
+	{"Fill Pat"}, // rstephane: PRE Filled Pattern
+	{"Rand Patt Fill"}, // rstephane: RANDOM Pattern steps Fill
+	{"Start Loop"}, // rstephane: DIVIDE LONG text
+	{"End Loop"}, // rstephane: LOOP LONG text
 	// -- to do add the Alien Wah effects long name??
+
 };
 
 

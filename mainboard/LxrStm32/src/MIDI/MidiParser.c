@@ -60,6 +60,7 @@ uint8_t armDivideOnOff=0;
 uint8_t maskType=0; // 0-16 for OTO effects
 uint8_t otoAmount; // amount OTO effects
 
+uint8_t randomType=0; // 0-16 for OTO effects
 
  float freq; // for Alien Wah effect
  float startphase;
@@ -1075,26 +1076,23 @@ void midiParser_ccHandler(MidiMsg msg, uint8_t updateOriginalValue)
 			// rstephane : Handle the RND button
 			case CC2_RND_VOICE1:
 				if(msg.data2 == 1)
-				{
-					randomDrumVoiceOSC(0);
-					randomDrumVoiceFILTER(0);
-				 }
+					randomDrumVoice(0,randomType);
 				break;	
 			case CC2_RND_VOICE2:
 				if(msg.data2 == 1)
-				{
-					randomDrumVoiceOSC(1);
-					randomDrumVoiceADSR(1);
-				 }
+					randomDrumVoice(1,randomType);
 				break;	
 			case CC2_RND_VOICE3:
 				if(msg.data2 == 1)
-				{
-					randomDrumVoiceCLICK(2);
-					randomDrumVoiceFM(2);
-				 }
+					randomDrumVoice(2,randomType);
 				break;	
-				
+			
+			case CC2_RND_MASKTYPE1:
+			case CC2_RND_MASKTYPE2:
+			case CC2_RND_MASKTYPE3:
+					randomType= msg.data2;
+					break;	
+					
 			//
 			//
 			// rstephane : Handle the OTO EFFECT button
@@ -1145,7 +1143,7 @@ void midiParser_ccHandler(MidiMsg msg, uint8_t updateOriginalValue)
 			//
 			case CC2_LOOP:
 				 // ARM the looping function 
-				if ((msg.data2 ==16) && (armLoop == 0))
+				if (((msg.data2<16)&&(msg.data2>12)) && (armLoop == 0))
 				{	
 					armLoop =1; // we swith on the loopin effects
 					// we backup the tracks lenght
@@ -1155,19 +1153,19 @@ void midiParser_ccHandler(MidiMsg msg, uint8_t updateOriginalValue)
 				}
 				else
 				// ARM Loop 12 lenght 
-				if ((msg.data2 ==12)  && (armLoop == 1))
+				if (((msg.data2 <=12)&&(msg.data2 >8))  && (armLoop == 1))
 				{	// we change the tracks lenght
 					seq_setLoopLength(12);
 				}
 				else
 				// ARM Loop 8 lenght 
-				if ((msg.data2 ==8)   && (armLoop == 1))
+				if (((msg.data2 <=8)&&(msg.data2 >4)) && (armLoop == 1))
 				{	// we change the tracks lenght
 					seq_setLoopLength(8);
 				}
 				else
 				// ARM Loop 4 lenght 
-				if ((msg.data2 ==4)   && (armLoop == 1))
+				if (((msg.data2 <=4)&&(msg.data2 >2))   && (armLoop == 1))
 				{	// we change the tracks lenght
 					seq_setLoopLength(4);
 				}
@@ -1198,49 +1196,49 @@ void midiParser_ccHandler(MidiMsg msg, uint8_t updateOriginalValue)
 			// rstephane : Handle the DIVIDE button
 			//
 			case CC2_DIVIDE:
-				if (msg.data2 == 1)
+				if ((msg.data2 >=1)&&(msg.data2 <2))
 				{	
 					armDivide = 0; 
 					armDivideOnOff = 1;
 				}	
 				else
 				// DIVIDE Loop 4 lenght and we arm the DIVIDE function
-				if ((msg.data2 == 4) /*&& (armDivideOnOff == 1)*/)
+				if (((msg.data2 >=4)&&(msg.data2 <8)) && (armDivideOnOff == 1))
 				{	// we change the tracks start
 					armDivide=4;
 					armDivideOnOff = 1;
 				}	
 				else
 				// DIVIDE Loop 8 lenght 
-				if ((msg.data2 == 8 ) /*&& (armDivideOnOff == 1)*/)
+				if (((msg.data2 >= 8)&&(msg.data2 <12))&& (armDivideOnOff == 1))
 				{	// we change the tracks start
 					armDivide=8;
 					armDivideOnOff = 1;
 				}	
 				else
 				// DIVIDE Loop 12 lenght 
-				if ((msg.data2 == 12)  /* && (armDivideOnOff == 1)*/)
+				if (((msg.data2 <=12)&&(msg.data2 <14))  && (armDivideOnOff == 1))
 				{	// we change the tracks start
 					armDivide=12;
 					armDivideOnOff = 1;
 				}
 				else
 				// DIVIDE Loop 14 lenght 
-				if ((msg.data2 == 14)  /* && (armDivideOnOff == 1)*/)
+				if ((msg.data2 == 14)   && (armDivideOnOff == 1))
 				{	// we change the tracks start
 					armDivide=14;
 					armDivideOnOff = 1;
 				} 
 				else
 				// DIVIDE Loop 16 lenght 
-				if ((msg.data2 ==15)  /*&& (armDivideOnOff == 1)*/)
+				if ((msg.data2 ==15)  && (armDivideOnOff == 1))
 				{	// we change the tracks start
 					armDivide=15;
 					armDivideOnOff = 1;
 				}
 				else
 				// STOP the DIVIDE function 
-				if ((msg.data2 ==16 ) /*&& (armDivideOnOff == 1)*/)
+				if ((msg.data2 ==16 ) && (armDivideOnOff == 1))
 				{	
 					armDivide = 0; // we swith on the start / divide effects
 					armDivideOnOff = 0;

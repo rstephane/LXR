@@ -297,6 +297,7 @@ enum ParamEnums
 	PAR_MIDI_NOTE6,
 	PAR_MIDI_NOTE7,
 
+// ------------------------------------------
 	// rstephane MY VALUES ADDED FOR RANDOM FUNCTION
 	PAR_RND_VOICE1,					// rstephane: random drum1 
 	PAR_RND_VOICE2,	
@@ -305,6 +306,11 @@ enum ParamEnums
 	PAR_RND_VOICE5,	
 	PAR_RND_VOICE6,	
 	PAR_RND_VOICE7,
+	
+	// Random Type rstephane
+	PAR_RND_MASKTYPE1,
+	PAR_RND_MASKTYPE2,
+	PAR_RND_MASKTYPE3,
 		
 	PAR_LOOP,					// rstephane: loop 
 	PAR_DIVIDE,					// rstephane: DIVIDE 
@@ -333,6 +339,9 @@ enum ParamEnums
 	PAR_ALIEN_FREQ,
 	PAR_ALIEN_STARTPHASE,
 	PAR_ALIEN_FB,
+	
+
+// -------------------------------------------------------------------------	
 	
 	//#########################################
 	//######## End of sound Parameters ########

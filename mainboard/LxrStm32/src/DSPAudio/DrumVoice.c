@@ -49,6 +49,7 @@
 #include "valueShaper.h"
 
 // rstephane  ---------
+extern uint8_t randomType; // 0-16 for OTO effects
 extern uint8_t maskType; // 0-16 for OTO effects
 extern uint8_t otoAmount; // 0-127 for OTO effects
 
@@ -296,8 +297,8 @@ void calcDrumVoiceSyncBlock(const uint8_t voiceNr, int16_t* buf, const uint8_t s
   	// rstephane: Alien Wah effect, 
   	// to put it one day as very nice, with four parameters
   	// works fine!
-  	//if (AlienWahOnOff>0)
-	//	calcAlienWahFxBlock(freq,startphase,fb,delay, buf,size);
+  	if (AlienWahOnOff==1)
+		calcAlienWahFxBlock(freq,startphase,fb,delay, buf,size);
   	  	
   	// rstephane : Moog Filter (not working correctly yet :-(
   	// moog_perform(0,0.8,0.4, buf,size);
@@ -321,7 +322,89 @@ void calcDrumVoiceSyncBlock(const uint8_t voiceNr, int16_t* buf, const uint8_t s
 //random all the parameters for voice 1 2 and 3
 //---------------------------------------------------
 
-void randomDrumVoice(const uint8_t voiceNr)
+void randomDrumVoice(const uint8_t voiceNr,uint8_t randomType)
+{				
+	switch(randomType)
+	{
+		case 1 : 
+			randomDrumVoiceOSC(voiceNr);  
+ 			break;
+		case 2 :
+			randomDrumVoiceFM(voiceNr);  
+			break;
+		case 3 : 
+			randomDrumVoiceCLICK(voiceNr);  
+			break;
+		case 4 : 
+			randomDrumVoiceFILTER(voiceNr);  
+			break;
+		case 5 : 
+			randomDrumVoiceADSR(voiceNr);  
+			break;
+		case 6 :
+			randomDrumVoiceOSC(voiceNr);
+			randomDrumVoiceFILTER(voiceNr);
+			break;
+		case 7 :
+			randomDrumVoiceOSC(voiceNr);
+			randomDrumVoiceADSR(voiceNr);
+			break;
+		case 8 : 
+			randomDrumVoiceOSC(voiceNr);
+			randomDrumVoiceFM(voiceNr);
+			break;
+		case 9 : 
+			randomDrumVoiceCLICK(voiceNr);
+			randomDrumVoiceFM(voiceNr);
+			break;
+		case 10 : 
+			randomDrumVoiceCLICK(voiceNr);  
+			randomDrumVoiceFILTER(voiceNr);
+		 	break;
+		case 11 : 
+			randomDrumVoiceFILTER(voiceNr);
+			randomDrumVoiceADSR(voiceNr);
+			break;
+		case 12 : 
+			randomDrumVoiceFM(voiceNr);
+			randomDrumVoiceFILTER(voiceNr);
+			break;
+		case 13 : 
+			randomDrumVoiceOSC(voiceNr);  
+			randomDrumVoiceFM(voiceNr);  
+			randomDrumVoiceCLICK(voiceNr);  
+			break;
+		case 14 : 
+			randomDrumVoiceCLICK(voiceNr);  
+			randomDrumVoiceFILTER(voiceNr);
+			randomDrumVoiceADSR(voiceNr);
+			break;
+		case 15 :
+			randomDrumVoiceOSC(voiceNr);  
+			randomDrumVoiceFILTER(voiceNr);  
+			randomDrumVoiceADSR(voiceNr);  
+ 			break;
+		case 16 :
+			randomDrumVoiceOSC(voiceNr);  
+			randomDrumVoiceFM(voiceNr);  
+			randomDrumVoiceCLICK(voiceNr);  
+			randomDrumVoiceFILTER(voiceNr);  
+			randomDrumVoiceADSR(voiceNr);  
+ 			break;
+		
+		default: 
+			break;
+		break;	
+	}	
+
+
+
+}
+
+
+
+
+void randomDrumVoiceALL(const uint8_t voiceNr)
 {
 		uint8_t rndData;
 		//uint32_t rndDataTemp;
@@ -444,15 +527,15 @@ void randomDrumVoiceADSR(const uint8_t voiceNr)
 	uint8_t rndData;
 	//VELOA2:
 	rndData = GetRndValue127();
-	slopeEg2_setAttack(&voiceArray[1].oscVolEg,rndData,AMP_EG_SYNC);
+	slopeEg2_setAttack(&voiceArray[voiceNr].oscVolEg,rndData,AMP_EG_SYNC);
 	
 	//VELOD2:
 	rndData = GetRndValue127();
-	slopeEg2_setDecay(&voiceArray[1].oscVolEg,rndData,AMP_EG_SYNC);
+	slopeEg2_setDecay(&voiceArray[voiceNr].oscVolEg,rndData,AMP_EG_SYNC);
 	
 	//PITCHD2:
 	rndData = GetRndValue127();
-	DecayEg_setDecay(&voiceArray[1].oscPitchEg,rndData);				
+	DecayEg_setDecay(&voiceArray[voiceNr].oscPitchEg,rndData);				
 						
 	
 	// const uint8_t trackNr, uint8_t patternNr		

@@ -191,6 +191,7 @@ enum NamesEnum
 	
 	// rstephane --------------
 	TEXT_RND_VOICE,	// rstephane: random text 
+	TEXT_RND_MASKTYPE,
 	TEXT_PREFILLED_PATTERN, 	// rstephane: Prefilled pattern	
 	TEXT_RANDOMFILL_PATTERN, 	// rstephane: RANDOMfilled pattern	
 	TEXT_DIVIDE,	// rstephane: DIVIDE text 
@@ -202,7 +203,6 @@ enum NamesEnum
 	TEXT_ALIEN_FREQ,
 	TEXT_ALIEN_STARTPHASE,
 	TEXT_ALIEN_FB,
-	
 		
 	NUM_NAMES
 };
@@ -296,6 +296,8 @@ enum shortNamesEnum
 
 	// rstephane ----------
 	SHORT_RND, // rstephane : short text random
+	SHORT_RND_MASKTYPE,
+	
 	SHORT_PREFILLED_PATTERN, // rstephane: Prefilled pattern
 	SHORT_RANDOMFILL_PATTERN,  // rstephane : random pattern fill text
 	SHORT_DIVIDE, // rstephane : short text DIVIDE
@@ -307,7 +309,7 @@ enum shortNamesEnum
 	SHORT_ALIEN_FREQ,
 	SHORT_ALIEN_STARTPHASE,
 	SHORT_ALIEN_FB,
-
+	
 	
 };
 //-----------------------------------------------------------------
@@ -420,6 +422,8 @@ enum longNamesEnum
 	
 		// rstephane ----------
 	LONG_RND_VOICE, // rstephane: long text random
+	LONG_RND_MASKTYPE,
+	
 	LONG_PREFILLED_PATTERN,		// rstephane: Prefilled pattern
 	LONG_RANDOMFILL_PATTERN , // rstephane : random pattern fill text
 	LONG_DIVIDE, // rstephane: long text DIVIDE
@@ -431,7 +435,7 @@ enum longNamesEnum
 	LONG_ALIEN_FREQ,
 	LONG_ALIEN_STARTPHASE,
 	LONG_ALIEN_FB,
-	
+
 };
 
 //enum for the save what parameter
