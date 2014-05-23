@@ -55,6 +55,91 @@
 #include "TriggerOut.h"
 
 
+// rstephane:prefilledpattern array
+uint8_t prefilledPatterntest [4] = {1,5,9,13} ;
+uint8_t prefilledPattern [72][16] =
+{
+{1,5,9,13} ,
+{1,7,11,15} ,
+{1,3, 4, 7, 8, 15}  ,
+{5,13 },
+{5,9,11,13,14,15} ,
+{1,9 },
+{1,9,11,14} ,
+{1,9,11},
+{1,7,11},
+{1,3,7,11,15 },
+{3,7,9,11,12} ,
+{1,3,7,9,12} ,
+{2,4,7,9,11,15} ,
+{1,9,15} ,
+{1,3,4,7,9,11,15} ,
+{3,4,7,8,10,12,15} ,
+{1,3,9,11}, 
+{1,3,7,11}, 
+{1,9,15 },
+{3, 7, 9 },
+{1, 7, 8, 9, 11, 15 },
+{3, 4, 7, 9, 11, 15} ,
+{1, 3, 7, 11, 15 },
+{3, 4, 7, 9, 11, 15} ,
+{1, 3, 7, 11, 16} ,
+{3, 9, 11},
+{1, 5, 9, 13 },
+{1, 3, 5, 7, 9, 11, 13, 15} ,
+{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16} ,
+{2, 3, 4, 5, 6, 7, 8, 10, 11, 12, 13, 14, 15, 16} ,
+{2, 4, 5, 6, 7, 8, 10, 12, 13, 15, 16} ,
+{3, 5, 7, 9, 13, 15} ,
+{1, 11}, 
+{3, 5, 9, 13, 15 },
+{3,7,9,11,12 },
+{1,5,9,12,15 },
+{3,7,11,15 },
+{3, 7,13 },
+{1,3,7,9,12,15 },
+{2,3,4,6,7,8,10,11,12,13,14} ,
+{1,5,9,15} ,
+{1,2,3,4,6,7,8,10,12,13,14,15} ,
+{5,9,11,15 },
+{1,3,4,7,9,11, 15} ,
+{3,5,9,11,13} ,
+{1,7,15 },
+{2,3,4,5,6,7,8,10,11,12,13,14,16} ,
+{1,2,3,4,5,6,8,9,10,11,12,13,15,16} ,
+{3,7,14 },
+{1,5,13 },
+{3,4,7,9,11,15} ,
+{11,12,15 },
+{1,3,4,7,11},
+{3,8,10,11,15 },
+{2,4,6,8,10,11,12,15}, 
+{10,11,13},
+{13,15 },
+{2,3,4,6,8,10,11,12, 15}, 
+{5,9,10,13,15,16}, 
+{9,11,13,15 },
+{1,2,3,4,6,7,13,14,15,16}, 
+{3,4 },
+{5,6,10 },
+{7,8,11,12 },
+{5,9,13,14,15 },
+{1,3,5,7,8,11},
+{1,5,7,13 },
+{9,11,12,13,15}, 
+{1,3 },
+{7,9,13},
+{3,9,15},
+{3,5,9,11} // 72 pre filled pattern
+};
+
+
+//----------------
+//rstephane: armDivide initialized
+uint8_t armDivide;
+uint8_t armDivideOnOff;
+
+
 #define SEQ_PRESCALER_MASK 	0x03
 #define MIDI_PRESCALER_MASK	0x04
 static uint8_t seq_prescaleCounter = 0;
@@ -499,8 +584,14 @@ static void seq_nextStep()
 
 		if((seq_stepIndex[i] / 8) == seqlen || (seq_stepIndex[i] & 0x7f) == 0)
 		{
-			//if end is reached reset track to step 0
-			seq_stepIndex[i] = 0;
+		 	//------ DIVIDE effect
+			// rstephane
+			//if end is reached reset track to step ARMDIVIDE * 8
+			if (armDivideOnOff)
+				seq_stepIndex[i] = armDivide*8;						
+			else
+				//if end is reached reset track to step 0
+				seq_stepIndex[i] = 0;
 		}
 
 
@@ -1483,3 +1574,117 @@ static void seq_setStepIndexToStart()
 	}
 
 }
+
+
+// rstephane : My LOOP / Divide functions
+void seq_setLoopLength(uint8_t length)
+{
+	uint8_t i;
+	
+	// we set the new Loop Tracks Lenght
+	for(i=0;i<NUM_TRACKS;i++) {
+		seq_setTrackLength(i, length);	
+	}
+
+}
+
+void seq_setLoopStartChaos(uint8_t start) 
+{
+	uint8_t i;
+	uint8_t seqlen;
+	
+	for(i=0;i<NUM_TRACKS;i++)
+	{
+		//increment the step index
+		//seq_stepIndex[i]++;
+		//check if track end is reached
+
+		// --AS **PATROT we now use this for length
+		seqlen=seq_patternSet.seq_patternLengthRotate[seq_activePattern][i].length;
+		if(!seqlen)
+			seqlen=16;
+
+		if((seq_stepIndex[i] / 8) == seqlen || (seq_stepIndex[i] & 0x7f) == 0)
+		{
+			//if end is reached reset track to step 'START'
+			seq_stepIndex[i] = start;
+		}		
+	}	// attention dans cet methode on va reseter remettre le START à zero 
+		//alors que d'autres track n'ont pas fini de jouer, bonjour le chaos !			
+}
+
+// rstephane : My prefilled pattern
+void seq_setPrePatternFill(uint8_t voiceNr, uint8_t msgdata2)
+{
+	uint8_t i,maxsteps = 16;
+	
+	// clear current pattern in the memory
+	seq_clearTrack(voiceNr, seq_activePattern);
+	// todo: clear the whole leds ! 
+	//frontParser_clearAllTrackLeds(voiceNr, seq_activePattern);
+			
+	// we fill the track (main steps only, sorry!)
+	for (i=0; i<maxsteps; i++) 
+	{ // we read the pattern steps that are ON: step 1, 5, 8, 13 , etc.
+		if (prefilledPattern[msgdata2-1][i]>=1 && prefilledPattern[msgdata2-1][i]<=16)
+			// uint8_t voice, uint8_t stepNr, uint8_t patternNr
+			seq_toggleMainStep(voiceNr, prefilledPattern[msgdata2-1][i]-1, seq_activePattern);
+		else 
+		{
+			frontParser_updateTrackLeds(voiceNr, seq_activePattern);
+			return; // we arrived at the end of the steps that are ON so we quit.
+		}
+	}
+}
+
+// rstephane : My prefilled pattern a special kind of pattern build on a bug ;-)
+void seq_setPreRythmFill(uint8_t voiceNr, uint8_t msgdata2)
+{
+	uint8_t i,maxsteps = 16;		
+	for (i=0; i<maxsteps; i++) // HEY GOOD FOR TOM, HH !! keep it !
+		seq_toggleMainStep(voiceNr, (prefilledPattern[msgdata2-1][i]-1), seq_activePattern);
+
+	// todo: clear the whole leds before display the new oneshot
+	frontParser_updateTrackLeds(voiceNr, seq_activePattern);
+}
+
+// rstephane : My RANDOM filled pattern
+void seq_setRandomPatternFill(uint8_t voiceNr, uint8_t msgdata2)
+{
+	//uint8_t old_min,old_max,new_min,new_max;
+	uint8_t i;
+	uint8_t randomSteps, numberRandomSteps;
+
+
+	// clear current pattern
+	seq_clearTrack(voiceNr, seq_activePattern);
+	
+	// todo: clear the whole leds before showing the new random pattern
+	
+	numberRandomSteps = GetRndValue16()+1;
+	
+	for (i=0; i<numberRandomSteps; i++) 
+	{
+		randomSteps = GetRndValue16();
+		seq_toggleMainStep(voiceNr, randomSteps, seq_activePattern);
+		//seq_toggleMainStep(voiceNr, randomSteps+1, seq_activePattern);
+	}
+	
+	
+	// const uint8_t trackNr, uint8_t patternNr		
+	frontParser_updateTrackLeds(voiceNr, seq_activePattern);	
+}
+
+/*old_min = 0;
+	old_max = 255;
+	new_min = 0;
+	new_max = 15;
+	numberRandomSteps = (((numberRandomSteps255-old_min)/(old_max-old_min))*(new_max-new_min)+new_min);
+	//randomSteps = (((randomSteps-old_min)/(old_max-old_min))*(new_max-new_min)+new_min);
+	*/
+		
+
+
+
+
+

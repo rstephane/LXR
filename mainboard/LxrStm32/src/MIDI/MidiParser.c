@@ -50,6 +50,28 @@
 #include "frontPanelParser.h"
 #include "usb_manager.h"
 
+
+
+//-----------------------------------------
+// rstephane: to save orginal track lenght for the LOOP function
+uint8_t originalTrackLength [NUM_TRACKS];
+uint8_t i,armLoop=0;
+uint8_t armDivideOnOff=0;
+uint8_t maskType=0; // 0-16 for OTO effects
+uint8_t otoAmount; // amount OTO effects
+
+
+ float freq; // for Alien Wah effect
+ float startphase;
+ float fb;
+ int delay;
+
+extern uint8_t maskTypebis=0; // 0-16 for OTO effects comes from FRONT AVR ! used to catch a Forced Repaint all :-)
+extern uint8_t AlienWahOnOff=0; // ALien Wah ON/OFF based on the Feedback Value (fb), if = 0 then ALien is OFF
+
+// --------------------------
+
+
 static uint16_t midiParser_activeNrpnNumber = 0;
 
 uint8_t midiParser_originalCcValues[0xff];
@@ -1046,6 +1068,307 @@ void midiParser_ccHandler(MidiMsg msg, uint8_t updateOriginalValue)
 
 			}
 				break;
+
+//---------------------------------------------------------------------------------------
+			//
+			// rstephane MY FUNCTIONS
+			// rstephane : Handle the RND button
+			case CC2_RND_VOICE1:
+				if(msg.data2 == 1)
+				{
+					randomDrumVoiceOSC(0);
+					randomDrumVoiceFILTER(0);
+				 }
+				break;	
+			case CC2_RND_VOICE2:
+				if(msg.data2 == 1)
+				{
+					randomDrumVoiceOSC(1);
+					randomDrumVoiceADSR(1);
+				 }
+				break;	
+			case CC2_RND_VOICE3:
+				if(msg.data2 == 1)
+				{
+					randomDrumVoiceCLICK(2);
+					randomDrumVoiceFM(2);
+				 }
+				break;	
+				
+			//
+			//
+			// rstephane : Handle the OTO EFFECT button
+			case CC2_OTO:
+				if(msg.data2>0)
+				{
+					// ------ TEST OTO effects
+					maskType=msg.data2;
+				}
+				break;	
+			case CC2_OTO_AMOUNT:
+					// ------ Set OTO effects amount (0 to 127, Dry to Wet)
+					otoAmount = msg.data2;
+
+				break;	
+			//
+			// 
+			// rstephane : Handle the Alien Wah EFFECT button
+			case CC2_ALIEN_FB:
+				if(msg.data2>0)
+				{
+					AlienWahOnOff=1;
+					fb=msg.data2; // for Alien Wah effect
+				}
+				else if(msg.data2==0)
+					AlienWahOnOff=0; 
+				break;	
+			case CC2_ALIEN_DELAY:
+				if(msg.data2>0)
+				{
+					delay=msg.data2; // for Alien Wah effect
+				}
+				break;	
+			case CC2_ALIEN_FREQ:
+				if(msg.data2>0)
+				{
+					freq=msg.data2; // for Alien Wah effect
+				}
+				break;	
+			case CC2_ALIEN_STARTPHASE:
+				if(msg.data2>0)
+				{
+					startphase=msg.data2; // for Alien Wah effect
+				}
+				break;	
+			//
+			// rstephane : Handle the LOOP button
+			//
+			case CC2_LOOP:
+				 // ARM the looping function 
+				if ((msg.data2 ==16) && (armLoop == 0))
+				{	
+					armLoop =1; // we swith on the loopin effects
+					// we backup the tracks lenght
+					for (i=0; i<NUM_TRACKS; i++)
+					 	originalTrackLength [i] = seq_getTrackLength(i);
+					
+				}
+				else
+				// ARM Loop 12 lenght 
+				if ((msg.data2 ==12)  && (armLoop == 1))
+				{	// we change the tracks lenght
+					seq_setLoopLength(12);
+				}
+				else
+				// ARM Loop 8 lenght 
+				if ((msg.data2 ==8)   && (armLoop == 1))
+				{	// we change the tracks lenght
+					seq_setLoopLength(8);
+				}
+				else
+				// ARM Loop 4 lenght 
+				if ((msg.data2 ==4)   && (armLoop == 1))
+				{	// we change the tracks lenght
+					seq_setLoopLength(4);
+				}
+				else
+				// ARM Loop 2 lenght 
+				if ((msg.data2 ==2 )   && (armLoop == 1))
+				{	// we change the tracks lenght
+					seq_setLoopLength(2);
+				}
+				else
+				// ARM Loop 1 lenght 
+				if ((msg.data2 ==1)   && (armLoop == 1))
+				{	// we change the tracks lenght
+					seq_setLoopLength(1);
+				}
+				else
+				// we swith off the loop effects
+				// Restore original lenght 
+				if ((msg.data2 == 16) && (armLoop == 1))
+				{	
+					armLoop =0; // we swith OFF the loopin effects
+					// we restore the orginal tracks lenght
+					for (i=0; i<NUM_TRACKS; i++)
+					 	seq_setTrackLength(i,originalTrackLength [i]);
+				}
+				break;	
+			//
+			// rstephane : Handle the DIVIDE button
+			//
+			case CC2_DIVIDE:
+				if (msg.data2 == 1)
+				{	
+					armDivide = 0; 
+					armDivideOnOff = 1;
+				}	
+				else
+				// DIVIDE Loop 4 lenght and we arm the DIVIDE function
+				if ((msg.data2 == 4) /*&& (armDivideOnOff == 1)*/)
+				{	// we change the tracks start
+					armDivide=4;
+					armDivideOnOff = 1;
+				}	
+				else
+				// DIVIDE Loop 8 lenght 
+				if ((msg.data2 == 8 ) /*&& (armDivideOnOff == 1)*/)
+				{	// we change the tracks start
+					armDivide=8;
+					armDivideOnOff = 1;
+				}	
+				else
+				// DIVIDE Loop 12 lenght 
+				if ((msg.data2 == 12)  /* && (armDivideOnOff == 1)*/)
+				{	// we change the tracks start
+					armDivide=12;
+					armDivideOnOff = 1;
+				}
+				else
+				// DIVIDE Loop 14 lenght 
+				if ((msg.data2 == 14)  /* && (armDivideOnOff == 1)*/)
+				{	// we change the tracks start
+					armDivide=14;
+					armDivideOnOff = 1;
+				} 
+				else
+				// DIVIDE Loop 16 lenght 
+				if ((msg.data2 ==15)  /*&& (armDivideOnOff == 1)*/)
+				{	// we change the tracks start
+					armDivide=15;
+					armDivideOnOff = 1;
+				}
+				else
+				// STOP the DIVIDE function 
+				if ((msg.data2 ==16 ) /*&& (armDivideOnOff == 1)*/)
+				{	
+					armDivide = 0; // we swith on the start / divide effects
+					armDivideOnOff = 0;
+				}
+				break;	
+			//
+			//
+			// rstephane : Handle the PREFILLED PATTERN  button
+			case CC2_PREFILLED_PATTERN0:
+				if(msg.data2>0)
+				{
+					// uint8_t VoiceNr, uint8_t msgdata2
+					seq_setPrePatternFill(0, msg.data2);
+				}
+				break;	
+			case CC2_PREFILLED_PATTERN1:
+				if(msg.data2>0)
+				{
+					// uint8_t VoiceNr, uint8_t msgdata2
+					seq_setPrePatternFill(1, msg.data2);
+				}
+				break;	
+			case CC2_PREFILLED_PATTERN2:
+				if(msg.data2>0)
+				{
+					// uint8_t VoiceNr, uint8_t msgdata2
+					seq_setPrePatternFill(2, msg.data2);
+					//seq_setPreRythmFill(2, msg.data2);
+				}
+				break;	
+			case CC2_PREFILLED_PATTERN3:
+				if(msg.data2>0)
+				{
+					// uint8_t VoiceNr, uint8_t msgdata2
+					seq_setPrePatternFill(3, msg.data2);
+				}
+				break;	
+			case CC2_PREFILLED_PATTERN4:
+				if(msg.data2>0)
+				{
+					// uint8_t VoiceNr, uint8_t msgdata2
+					seq_setPrePatternFill(4, msg.data2);
+				}
+				break;	
+			case CC2_PREFILLED_PATTERN5:
+				if(msg.data2>0)
+				{
+					// uint8_t VoiceNr, uint8_t msgdata2
+					seq_setPrePatternFill(5, msg.data2);
+				}
+				break;	
+			case CC2_PREFILLED_PATTERN6:
+				if(msg.data2>0)
+				{
+					// uint8_t VoiceNr, uint8_t msgdata2
+					seq_setPrePatternFill(6, msg.data2);
+					//seq_setPreRythmFill(6, msg.data2);
+				}
+				break;	
+			case CC2_PREFILLED_PATTERN7:
+				if(msg.data2>0)
+				{
+					// uint8_t VoiceNr, uint8_t msgdata2
+					seq_setPrePatternFill(7, msg.data2);
+					//seq_setPreRythmFill(7, msg.data2);
+				}
+			//
+			//
+			// rstephane : Handle the RANDOM FILL PATTERN  button
+			case CC2_RANDOMFILL_PATTERN0:
+				if(msg.data2>0)
+				{
+					// uint8_t VoiceNr, uint8_t msgdata2
+					seq_setRandomPatternFill(0, msg.data2);
+				}
+				break;	
+			case CC2_RANDOMFILL_PATTERN1:
+				if(msg.data2>0)
+				{
+					// uint8_t VoiceNr, uint8_t msgdata2
+					seq_setRandomPatternFill(1, msg.data2);				
+				}
+				break;	
+			case CC2_RANDOMFILL_PATTERN2:
+				if(msg.data2>0)
+				{
+					// uint8_t VoiceNr, uint8_t msgdata2
+					seq_setRandomPatternFill(2, msg.data2);
+				}
+				break;	
+			case CC2_RANDOMFILL_PATTERN3:
+				if(msg.data2>0)
+				{
+					// uint8_t VoiceNr, uint8_t msgdata2
+					seq_setRandomPatternFill(3, msg.data2);
+				}
+				break;	
+			case CC2_RANDOMFILL_PATTERN4:
+				if(msg.data2>0)
+				{
+					// uint8_t VoiceNr, uint8_t msgdata2
+					seq_setRandomPatternFill(4, msg.data2);
+				}
+				break;	
+			case CC2_RANDOMFILL_PATTERN5:
+				if(msg.data2>0)
+				{
+					// uint8_t VoiceNr, uint8_t msgdata2
+					seq_setRandomPatternFill(5, msg.data2);
+				}
+				break;	
+			case CC2_RANDOMFILL_PATTERN6:
+				if(msg.data2>0)
+				{
+					// uint8_t VoiceNr, uint8_t msgdata2
+					seq_setRandomPatternFill(6, msg.data2);
+				}
+				break;	
+			case CC2_RANDOMFILL_PATTERN7:
+				if(msg.data2>0)
+				{
+					// uint8_t VoiceNr, uint8_t msgdata2
+					seq_setRandomPatternFill(7, msg.data2);
+				}
+				break;	
+
+
+
 
 			default:
 				break;
