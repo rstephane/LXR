@@ -1,4 +1,27 @@
-Sonic Potions LXR Drumsynth Firmware
+LXR-fusion Drumsynth Firmware
+====================================
+This version is a fork from PLD/RUDEOG that contains all original code and many new features (I called this version FUSION ! ):
+
+### 1. You can select among 72 pre filled patterns for each voice
+
+Select a track (1-7), then click on the button VOICE, then click on the OSC menu to access the extra features :-)
+### 2. You can randomize steps/patterns for each voice, creating surprising drum lines !
+
+Select a track (1-7), then click on the button VOICE, then click on the OSC menu to access the extra features :-)
+### 3. You can make a LOOP/DIVIDE effect like on the Arturia Spark machine
+
+Select the PERF button, then click again the PERF button to access the sub menu:  You will see a menu called LEN, to arm the looping effects, turn the knob until you reach 127 and then turn down little by little the knob (until ZERO) to listen to the effect!
+
+### 4. OTO Biscuit Sounds effect
+
+Select the PERF button, then click again the PERF button to access the sub
+menu:  You will see a menu called OTO and AMT.
+Turn the OTO knob between 1 and 15 (15 different swapping bits mode) and then turn the AMT button to hear the FX
+
+Enjoy!
+
+
+Sonic Potions LXR Drumsynth
 ====================================
 The LXR is a digital drum synthesizer based on the 32-bit Cortex-M4 processor and an Atmega644 8-bit CPU. Developed by Julian Schmidt.
 
@@ -15,90 +38,123 @@ Please note that there are libraries from ST and ARM used in the mainboard code 
     ST STM32_USB_OTG_Driver
     ST STM32F4xx_StdPeriph_Driver
 
+
+Here are the instructions for MAC OS Build (MAC OS 10.8 and above):
+-------------------------------------------------------------------
+
+Hello,
+First of all, I would like to thanks @Rudeog, @Pld, @TB323, @Julian and @spfrc for their great help with me :-) I must have forgot some names who helped me, sorry in advance :-)
+
+Tutorial to build the firmware for MAC OS 10.8 and above:
+
+Note 1 - The installation steps are rather simple as I don't use anymore ECLIPSE. Indeed, configuring Eclipse on MAC to compile the code is rather tricky for a beginner like me.
+
+Note 2 - The LXR code is divided into two mains code parts that we will compile "separately" using two different tools :-)
+
+    the AVR Atmel CODE (LCD, front panel control, USB, SD card)
+    the ARM CODE (main LXR code for the voices / sounds)
+
+
+General steps:
+====================================
+
+We need "specific compilers and librairies" for each CODE. We need to change the PATH in your .bash_profile, and finally we need a MAKEFILE to build the firmware:
+
+    AVR AtmelCODE  -> command/libs avr-gcc
+    GNU ARM CODE --> command/libs arm-eabi-none-gcc
+    Change PATH on your MAC -> I will provide an exemple later.
+    LXR Code  -> We need the LXR code that we will download later.
+    MACOS specific MAKEFILE  -> We need special makefile that @PLD has provided. I will give you the link later
+    Compiling and build the firmware.bin file-> You just have to launch the command "make firmware"/"make clean" from a MAC terminal window.
+
+
+Let's start!
+====================================
+
+
+1- AVR COMPILER & LIBS
+====================================
+
+- Download of Atmel AVR 8-bit toolchain from http://www.obdev.at/products/crosspack/download.html
+- You will get a .dmg file that you should extract and install (CrossPack-AVR-20131216.dmg is the most recent as of 2015/05/02)
+- The compiler and libs are installed under /usr/local/CrossPack-AVR-20131216/
+- Note that you will also find a folder like /usr/local/CrossPack-AVR/ (this folder is an alias to the previous folder - symlink).
+
+2- GNU ARM COMPILER AND LIBS
+====================================
+
+- Download of GNU bare metal ARM toolchain from https://launchpad.net/gcc-arm-embedded (v4.8)
+- Take the MAC version (something like : gcc-arm-none-eabi-4_8-2014q1-20140314-mac.tar.bz2 )
+- Extract the compressed/tar file.
+- Copy the extracted folder under /usr/local/
+- Nothing else to do !
+
+3- Change your PATH
+====================================
+
+We need to add in our MAC session a PATH to both compilers (and libs), here is mine:
 	
+	export PATH=$PATH:/usr/local/CrossPack-AVR-20131216/bin:/usr/local/CrossPack-AVR-20131216/:/usr/include:/usr/local/CrossPack-AVR-20131216/avr/include:/usr/local/gcc-arm-none-eabi-4_8-2014q1/bin
+	export ARM_TOOLKIT_ROOT=/usr/local/gcc-arm-none-eabi-4_8-2014q1
+	export AVR_TOOLKIT_ROOT=/usr/local/CrossPack-AVR-20131216
 
-Many Thanks to user Rudeog who contributet a lot of bugfixes and features for version 0.26 and 0.33 as well as Patrick Dowling for the Makefiles for the Linux build system!
+In a terminal window, execute "source ./.bash_profile" to update the PATH to your system. For the moment, don't try to understand what are ARM_TOOLKIT / AVR_TOLLKIT variables, I will explain why we need this later.
 
+4- Grab the LXR Code
+====================================
 
+I advice you to grab the code either from :
 
-Instructions for building on Linux using the provided makefiles:
-----------------------------------------------------------------
-You will need:
-- the ARM GCC compiler 
-- the AVR GCC compiler 
-- the AVR c libs
+- Julian repository on GITHUB https://github.com/SonicPotions/LXR -> but you may have issues as this code contains wrong backslashes in certain area of the code. Should be soon fixed.
 
+- PLD repository https://github.com/patrickdowling/LXR -> but you may also have issues with this code containing wrong backslashes in certain area of the code.
+    
+- rudeog repository https://github.com/rudeog/LXR -> this one is OKAY with many extra features compared to Julian code. 
 
- 
-GNU Tools for ARM Embedded Processors 
--------------------------------------
-project homepage: https://launchpad.net/gcc-arm-embedded
+- rstephane repository https://github.com/rstephane/LXR  -> this one is OKAY, it is equivalent to Julian CODE without the wrong backslashes. 
 
+Of course once downloaded, you should extract the code and copy it to any folder you like.
+On my side I did copied it under: /Users/music/Documents/workspace/LXR/
 
-For Ubuntu 10.04/12.04/13.04 32/64-bit user, PPA is available at https://launchpad.net/~terry.guo/+archive/gcc-arm-embedded.
-
-otherwise you can download the 32bit binaries here
-https://launchpad.net/gcc-arm-embedded/4.8/4.8-2014-q1-update/+download/gcc-arm-none-eabi-4_8-2014q1-20140314-linux.tar.bz2
-
-
---- Installing the ARM GCC binaries ----
-
-download the binary package:
-'wget https://launchpad.net/gcc-arm-embedded/4.8/4.8-2014-q1-update/+download/gcc-arm-none-eabi-4_8-2014q1-20140314-linux.tar.bz2'
-
-extract it:
-'tar xvjf gcc-arm-none-eabi-4_8-2014q1-20140314-linux.tar.bz2 '
-
-move it to /opt/ARM:
-'sudo mv gcc-arm-none-eabi-4_8-2014q1 /opt/ARM'
-
-include it permanently in your PATH variable
-'echo "PATH=$PATH:/opt/ARM/bin" >> ~/.bashrc'
-
-IMPORTANT!
-for x64 systems, you have to install the 32-bit version of libc6 or you will get an 'arm-none-eabi-gcc: not found' error when invocing arm-none-eabi-gcc:
-'sudo apt-get install libc6-dev-i386'
+5- MACOS specific makefile 
+====================================
 
 
+I advice you to grab the makefile either from :
 
---- Installing the AVR GCC compiler and AVR libc---
+- PLD repository https://github.com/patrickdowling/LXR
+- rstephane (@egnouf) repository https://github.com/rstephane/LXR
 
-These should normaly be available from you package manager
-'sudo apt-get install gcc-avr avr-libc'
+You will find on the root path of both repository a file called MAKEFILE.
+Download it!
 
+Once downloaded, copy it at the root PATH of the code you dowloaded in STEP 4.
+In my case, I copied the makefile of PLD into /Users/music/Documents/workspace/LXR/
 
-Now you are ready to go.
-To build the firmware, go to the LXR folder containing this file and type:
-'make firmware'
+If you have taken the whole LXR code from @PLD or rstephane (@egnouf) you don't need to download once more the Makefile, it is provided within ! 
 
-you should now find a new FIRMWARE.BIN file in the 'firmware image' subfolder
+The Makefile of rstephane is a copy of the one provided by @PLD
 
+Now, let's go back to the .bash_profile file:
 
-Thanks a lot to Patrick Dowling and Andrew Shakinovsky for their code contributions!
+	export PATH=$PATH:/usr/local/CrossPack-AVR-20131216/bin:/usr/local/CrossPack-AVR-20131216/:/usr/include:/usr/local/CrossPack-AVR-20131216/avr/include:/usr/local/gcc-arm-none-eabi-4_8-2014q1/bin
+	export ARM_TOOLKIT_ROOT=/usr/local/gcc-arm-none-eabi-4_8-2014q1
+	export AVR_TOOLKIT_ROOT=/usr/local/CrossPack-AVR-20131216
 
-Instructions for building on windows using Eclipse:
----------------------------------------------------
+You can notice the two variables ARM_TOOLKIT_ROOT and AVR_TOOLKIT_ROOT.
+They are used by the MAKEFILE that has created @PLD (and also used by rstephane).
 
-1.  Install Eclipse Juno CDT (You could install a later version, but this is the version I have working)
+Don't forget to change their values appropriately, according to your system path, where you installed the libs... etc.  
 
-2.  Install the Eclipse GNU ARM plugin. Go into the help menu, Install new Software, add a site: http://gnuarmeclipse.sourceforge.net/updates. Then check the box to install that plugin.
+6- Compile!!!!
+====================================
 
-3.  Download and install the GCC ARM toolchain https://launchpad.net/gcc-arm-embedded/+download
+You are nearly done:
 
-4.  Download and install gnu make: http://gnuwin32.sourceforge.net/packages/make.htm
+- You just have to launch the command "make firmware" from a MAC terminal window. To clean the code you can execute "make clean".
+- You will get a FIRMWARE.BIN image, copy this file on your SD CARD. Put the SD CARD into the LXR drummachine, hold the main rotary encoder and switch on the drum machine.... the system will upload and upgrade the machine with your code.
 
-5.  Download and install Atmel AVR toolchain from http://www.atmel.com/tools/ATMELAVRTOOLCHAINFORWINDOWS.aspx (you don't need the headers package)
+If you have downloaded @rstephane code, similar to @Julian and @PLD, you will noticed that when you switch on the machine, it displays "LXR-Drums-V" instead of "LXR Drums V". If so, you have successfully loaded (and compiled) LXR CODE!!!!
 
-6.  Ensure that the bin directory from 3, 4, and 5 are on the path. I made a batch file that adds these 3 bin directories to my path and launches eclipse.
-
-7.  Fetch the LXR sources from github. You can either install git and do it the git way, or download a zip and unzip it.
-
-8.  In Eclipse, create a workspace in root folder of whole tree that you unzipped (or git'd).
-
-9.  Add two project dirs mainboard\firmware\DrumSynth_FPU and front\AVR to the workspace. To do this, use File/Import/General/Existing projects into workspace. Then select root directory and browse to these dirs. Do this step once for each of these two dirs. You will end up with two projects in your workspace.
-
-10.  These should build. Eclipse is a bit squirrely, so you might need to do a make clean first to create the first makefiles, or rebuild indexes.
-
-11.  I've built the firmwareimagebuilder.exe in the \tools\bin folder. I've also put a batch file that launches it and copies the binaries from the respective output directories to create FIRMWARE.BIN in that same dir. If you don't trust the .EXE I built, you will need to build it from tools\FirmwareImageBuilder\FirmwareImageBuilder. As is you will need visual studio. If you don't have it, you can try to install the free version, mingw, etc and compile the one file FirmwareImageBuilder.cpp (I've fixed it so it should build with any tool) and make your own exe and copy it to that dir.
-
-12.  Thats it, after running the batch file you will have your firmware file. 
+Well done and happy hacking!
+:-)
