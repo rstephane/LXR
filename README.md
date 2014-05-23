@@ -1,6 +1,6 @@
-LXR-fusion Drumsynth Firmware
+LXR-marimba Drumsynth Firmware
 ====================================
-This version is a fork from PLD/RUDEOG that contains all original code and many new features (I called this version FUSION ! ):
+This version is a fork from PLD/RUDEOG that contains all original code and many new features (I called this version MARIMBA ! ):
 
 ### 1. You can select among 72 pre filled patterns for each voice
 
