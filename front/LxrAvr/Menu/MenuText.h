@@ -311,6 +311,21 @@ const char shortNames[][4] PROGMEM  =
 	{"co1"},  // trigger clock out1 ppq
 	{"co2"},  // trigger clock out2 ppq
 	{"pcr"}, // pattern change resets bar counter
+	
+	// rstephane ---------
+	{"rnd"}, // rstephane: RND VOice
+	{"pat"}, // rstephane: PAT number 
+	{"rpf"}, // rstephane: RANDOM Pattern steps Fill
+	{"sta"}, // rstephane: start (divide effect) loop index
+	{"end"}, // rstephane: loop Lenght
+	{"oto"}, // rstephane: OTO mode
+	{"amt"}, // rstephane: OTO amount
+	
+	{"dly"}, // rstephane: Alien Wah
+	{"frq"},
+	{"phs"},
+	{"amt"}, // Alien Wah Feedback, used to swith On. Off the effect
+	
 };
 //-----------------------------------------------------------------
 // These correspond with the catNamesEnum in menu.h
@@ -421,6 +436,14 @@ const char longNames[][16] PROGMEM =
 	{"Out2 PPQ"},
 	{"Gate Mode"},
 	{"PCReset" }, // reset bar counter on manual pattern change
+	
+	// rstephane ------- 
+	{"Random"}, // rstephane: RND VOice LONG text
+	{"FillPat"}, // rstephane: PRE Filled Pattern
+	{"RandPattFill"}, // rstephane: RANDOM Pattern steps Fill
+	{"StartLoop"}, // rstephane: DIVIDE LONG text
+	{"EndLoop"}, // rstephane: LOOP LONG text
+	// -- to do add the Alien Wah effects long name??
 };
 
 

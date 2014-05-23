@@ -188,6 +188,22 @@ enum NamesEnum
 	TEXT_TRIGGER_GATE_MODE,
 	TEXT_BAR_RESET_MODE,
 	TEXT_MIDI_CHAN_GLOBAL,
+	
+	// rstephane --------------
+	TEXT_RND_VOICE,	// rstephane: random text 
+	TEXT_PREFILLED_PATTERN, 	// rstephane: Prefilled pattern	
+	TEXT_RANDOMFILL_PATTERN, 	// rstephane: RANDOMfilled pattern	
+	TEXT_DIVIDE,	// rstephane: DIVIDE text 
+	TEXT_LOOP,	// rstephane: LOOP text
+	TEXT_OTO,	// rstephane : OTO
+	TEXT_OTO_AMOUNT,  // rstephane : Amount
+	// rstephane : Alien Wah
+	TEXT_ALIEN_DELAY,
+	TEXT_ALIEN_FREQ,
+	TEXT_ALIEN_STARTPHASE,
+	TEXT_ALIEN_FB,
+	
+		
 	NUM_NAMES
 };
 //-----------------------------------------------------------------
@@ -276,8 +292,21 @@ enum shortNamesEnum
 	SHORT_TRIGGER_IN,
 	SHORT_TRIGGER_OUT1,
 	SHORT_TRIGGER_OUT2,
-	SHORT_BAR_RESET_MODE
+	SHORT_BAR_RESET_MODE,
 
+	// rstephane ----------
+	SHORT_RND, // rstephane : short text random
+	SHORT_PREFILLED_PATTERN, // rstephane: Prefilled pattern
+	SHORT_RANDOMFILL_PATTERN,  // rstephane : random pattern fill text
+	SHORT_DIVIDE, // rstephane : short text DIVIDE
+	SHORT_LOOP, // rstephane : short text LOOP
+	SHORT_OTO,
+	SHORT_OTO_AMOUNT,
+	// rstephane : Alien Wah
+	SHORT_ALIEN_DELAY,
+	SHORT_ALIEN_FREQ,
+	SHORT_ALIEN_STARTPHASE,
+	SHORT_ALIEN_FB,
 
 	
 };
@@ -388,6 +417,20 @@ enum longNamesEnum
 	LONG_TRIGGER_OUT2,
 	LONG_TRIGGER_GATE_MODE,
 	LONG_BAR_RESET_MODE,
+	
+		// rstephane ----------
+	LONG_RND_VOICE, // rstephane: long text random
+	LONG_PREFILLED_PATTERN,		// rstephane: Prefilled pattern
+	LONG_RANDOMFILL_PATTERN , // rstephane : random pattern fill text
+	LONG_DIVIDE, // rstephane: long text DIVIDE
+	LONG_LOOP, // rstephane: long text LOOP
+	LONG_OTO,
+	LONG_OTO_AMOUNT,
+	// rstephane : Alien Wah
+	LONG_ALIEN_DELAY,
+	LONG_ALIEN_FREQ,
+	LONG_ALIEN_STARTPHASE,
+	LONG_ALIEN_FB,
 	
 };
 

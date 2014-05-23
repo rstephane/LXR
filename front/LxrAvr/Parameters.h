@@ -297,6 +297,43 @@ enum ParamEnums
 	PAR_MIDI_NOTE6,
 	PAR_MIDI_NOTE7,
 
+	// rstephane MY VALUES ADDED FOR RANDOM FUNCTION
+	PAR_RND_VOICE1,					// rstephane: random drum1 
+	PAR_RND_VOICE2,	
+	PAR_RND_VOICE3,	
+	PAR_RND_VOICE4,	
+	PAR_RND_VOICE5,	
+	PAR_RND_VOICE6,	
+	PAR_RND_VOICE7,
+		
+	PAR_LOOP,					// rstephane: loop 
+	PAR_DIVIDE,					// rstephane: DIVIDE 
+	PAR_OTO,					// rstephane: OTO FX mode 
+	PAR_OTO_AMOUNT,					// rstephane: AMOUNT 
+		
+	PAR_PREFILLED_PATTERN0, 			// rstephane: Prefilled pattern
+	PAR_PREFILLED_PATTERN1, 
+	PAR_PREFILLED_PATTERN2, 
+	PAR_PREFILLED_PATTERN3, 
+	PAR_PREFILLED_PATTERN4, 
+	PAR_PREFILLED_PATTERN5,
+	PAR_PREFILLED_PATTERN6,
+	PAR_PREFILLED_PATTERN7,  
+	PAR_RANDOMFILL_PATTERN0, 			// rstephane: RANDOMFILL pattern
+	PAR_RANDOMFILL_PATTERN1, 
+	PAR_RANDOMFILL_PATTERN2, 
+	PAR_RANDOMFILL_PATTERN3, 
+	PAR_RANDOMFILL_PATTERN4, 
+	PAR_RANDOMFILL_PATTERN5,
+	PAR_RANDOMFILL_PATTERN6,
+	PAR_RANDOMFILL_PATTERN7,  
+	
+	// rstephane : Alien Wah 
+	PAR_ALIEN_DELAY,
+	PAR_ALIEN_FREQ,
+	PAR_ALIEN_STARTPHASE,
+	PAR_ALIEN_FB,
+	
 	//#########################################
 	//######## End of sound Parameters ########
 	//#########################################
