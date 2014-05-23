@@ -83,7 +83,7 @@ int main(void)
 	//lcd_string_F(PSTR("LXR Drums V"));
 	
 	// rstephane -----
-	lcd_string_F(PSTR("LXR Marimba V"));
+	lcd_string_F(PSTR("LXR Marimba"));
 	
 	lcd_string(FIRMWARE_VERSION);
 #endif
