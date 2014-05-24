@@ -67,8 +67,7 @@ uint8_t randomType=0; // 0-16 for OTO effects
  float fb;
  int delay;
 
-extern uint8_t maskTypebis=0; // 0-16 for OTO effects comes from FRONT AVR ! used to catch a Forced Repaint all :-)
-extern uint8_t AlienWahOnOff=0; // ALien Wah ON/OFF based on the Feedback Value (fb), if = 0 then ALien is OFF
+uint8_t AlienWahOnOff=0; // ALien Wah ON/OFF based on the Feedback Value (fb), if = 0 then ALien is OFF
 
 // --------------------------
 

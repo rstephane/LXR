@@ -99,7 +99,8 @@ for(i=0;i<size;i++)
 
 void calc3BandEqBlock(uint8_t lowFreq, uint8_t midFreq,uint8_t  highFreq, int16_t* buf, const uint8_t size)
 {
-EQSTATE* eq;
+//EQSTATE* eq;
+EQSTATE eq[size];
 int16_t bufTemp[size];
 double l,m,h; // Low / Mid / High - Sample Values
 uint16_t i;
@@ -122,7 +123,7 @@ eq->hg = 1.0; // Leave high band alone
 	for(i=0;i<size;i++)
  	{
 		// Filter #1 (lowpass)
-		input = (bufTemp[i])/((float)0x7fff);
+		input = (bufTemp[i]);
 		eq->f1p0 += (eq->lf * (input - eq->f1p0)) + vsa;
 		eq->f1p1 += (eq->lf * (eq->f1p0 - eq->f1p1));
 		eq->f1p2 += (eq->lf * (eq->f1p1 - eq->f1p2));
@@ -157,9 +158,9 @@ eq->hg = 1.0; // Leave high band alone
  
 		// result
 		out = (l + m + h);
-   		//if (out<-32768) out=-32768;
-   		//else if (out>32767) out=32767; //Prevents clipping
-   		bufTemp[i]=out *((float)0x7fff);
+   		if (out<-32768) out=-32768;
+   		else if (out>32767) out=32767; //Prevents clipping
+   		bufTemp[i]=out ;
 	}; 
 	
 // We copy back the results :-)	
