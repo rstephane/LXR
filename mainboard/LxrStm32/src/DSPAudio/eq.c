@@ -51,10 +51,13 @@ static double vsa = (1.0 / 4294967295.0); // Very small amount (Denormal Fix)
 //
 // Set mixfreq to whatever rate your system is using (eg 48Khz)
 
-void init_3band_state(EQSTATE* eq, int lowfreq, int highfreq, int mixfreq,const uint8_t size)
+//EQSTATE* init_3band_state(EQSTATE* eq, int lowfreq, int highfreq, int mixfreq,const uint8_t size)
+EQSTATE* init_3band_state(int lowfreq, int highfreq, int mixfreq,const uint8_t size)
 {
 // Clear state
 uint16_t i;
+EQSTATE* eq; 
+
 for(i=0;i<size;i++)
  	{
 		eq->f1p0 = 0.0;
@@ -82,6 +85,8 @@ for(i=0;i<size;i++)
 		eq->hf = 2 * sin(M_PI * ((double)highfreq / (double)mixfreq));
 
 	}
+	
+	return eq;
 
 }
 
@@ -99,8 +104,8 @@ for(i=0;i<size;i++)
 
 void calc3BandEqBlock(uint8_t lowFreq, uint8_t midFreq,uint8_t  highFreq, int16_t* buf, const uint8_t size)
 {
-//EQSTATE* eq;
-EQSTATE eq[size];
+EQSTATE* eq;
+//EQSTATE eq[size];
 int16_t bufTemp[size];
 double l,m,h; // Low / Mid / High - Sample Values
 uint16_t i;
@@ -112,7 +117,8 @@ for(i=0;i<size;i++)
 	bufTemp[i] = buf[i] ;
   		
 
-init_3band_state(eq,880,5000,44100,size);
+//init_3band_state(eq,880,5000,44100,size);
+eq=init_3band_state(880,5000,44100,size);
 
 // gain of the three bands, we need to manipoulate this to make the EQ sounds changes ! 
 eq->lg = 1.5; // Boost bass by 50%
@@ -123,7 +129,7 @@ eq->hg = 1.0; // Leave high band alone
 	for(i=0;i<size;i++)
  	{
 		// Filter #1 (lowpass)
-		input = (bufTemp[i]);
+		input = (bufTemp[i]/32767.f);
 		eq->f1p0 += (eq->lf * (input - eq->f1p0)) + vsa;
 		eq->f1p1 += (eq->lf * (eq->f1p0 - eq->f1p1));
 		eq->f1p2 += (eq->lf * (eq->f1p1 - eq->f1p2));
@@ -154,13 +160,13 @@ eq->hg = 1.0; // Leave high band alone
 
 		eq->sdm3 = eq->sdm2;
 		eq->sdm2 = eq->sdm1;
-		eq->sdm1 = bufTemp[i];
+		eq->sdm1 = input;
  
 		// result
-		out = (l + m + h);
-   		if (out<-32768) out=-32768;
-   		else if (out>32767) out=32767; //Prevents clipping
-   		bufTemp[i]=out ;
+		out = (l + m + h) ; 
+   		if ((out * 32767)<-32768) out=-32768;
+   		else if ((out* 32767)>32767) out=32767; //Prevents clipping
+   		bufTemp[i]=out * 32767;
 	}; 
 	
 // We copy back the results :-)	

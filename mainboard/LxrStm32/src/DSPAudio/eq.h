@@ -66,7 +66,8 @@ double hg; // high gain
 //extern double do_3band(EQSTATE* es, double sample);
 
 // rstephane 
-void init_3band_state(EQSTATE* eq, int lowfreq, int highfreq, int mixfreq,const uint8_t size);
+//void init_3band_state(EQSTATE* eq, int lowfreq, int highfreq, int mixfreq,const uint8_t size);
+EQSTATE* init_3band_state(int lowfreq, int highfreq, int mixfreq,const uint8_t size);
 void calc3BandEqBlock(uint8_t lowFreq, uint8_t midFreq,uint8_t  highFreq, int16_t* buf, const uint8_t size);
 
 

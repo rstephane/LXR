@@ -498,7 +498,7 @@ const enum Datatypes PROGMEM parameter_dtypes[NUM_PARAMS] = {
 		/* PAR_ALIEN_FREQ*/		DTYPE_0B127,
 		/* PAR_ALIEN_STARTPHASE*/	DTYPE_0B127,
 		/* PAR_ALIEN_FB*/		DTYPE_0B127,
-
+		
 		
 		
   // --------------------------------------------------------------------------------	    

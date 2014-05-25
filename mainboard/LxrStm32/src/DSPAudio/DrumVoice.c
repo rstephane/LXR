@@ -48,6 +48,9 @@
 // rstephane : pour random functions
 #include "valueShaper.h"
 #include "distortion.h"
+#include "biquad.h"
+#include "eq.h"
+
 
 // rstephane  ---------
 extern uint8_t randomType; // 0-16 for OTO effects
@@ -57,7 +60,7 @@ extern uint8_t otoAmount; // 0-127 for OTO effects
 extern uint8_t freq; // for Alien Wah effect 0 - 127 -> 0.0 to 1.0
 extern uint8_t startphase; // 0.0 to 1.0
 extern uint8_t fb; // 0.0 1.0
-extern uint8_t delay; // 5 to 50 if possible!
+extern int8_t delay; // 5 to 50 if possible!
 extern uint8_t AlienWahOnOff; // Set ALien FX ON or OFF 
 // end --------
 
@@ -286,30 +289,30 @@ void calcDrumVoiceSyncBlock(const uint8_t voiceNr, int16_t* buf, const uint8_t s
 	// -------------------------------------------------
 	//rstephane: OTO effect alike ;-)
   	// works fine!
+  	//(uint8_t maskType, int16_t* buf,const uint8_t size, uint8_t otoAmount)
   	if (maskType>0)
-		//(uint8_t maskType, int16_t* buf,const uint8_t size, uint8_t otoAmount)
-  		calcOTOFxBlock(maskType,buf, size, otoAmount);
-  	
-	// rstephane : DELAY
-	//if (maskType>0)
-	//calcDelayBlock(1500, buf, size);
-
+		calcOTOFxBlock(maskType,buf, size, otoAmount);
   		
   	// rstephane: Alien Wah effect, 
   	// to put it one day as very nice, with four parameters
   	// works fine!
-  	if (AlienWahOnOff==1)
-		calcAlienWahFxBlock(freq,startphase,fb,delay, buf,size);
-  	  	
-  	// rstephane : Moog Filter (not working correctly yet :-(
-  	// moog_perform(0,0.8,0.4, buf,size);
-  	
+  	//if (AlienWahOnOff>0)
+	//if (maskType>2)
+	//	calcAlienWahFxBlock(freq,startphase,fb,delay, buf,size);
+	//	calcAlienWahFxBlock(80,35,50,maskType, buf,size);
+
+  
   	// rstephane : 3 band EQ 
   	//-----------------
   	//calc3BandEqBlock(lowFreq, midFreq, highFreq, buf, size);
-  	//calc3BandEqBlock(880,5000, 24000, buf, size);
-  	
+  	//if (maskType>2)
+  	//	calc3BandEqBlock(880,5000, 24000, buf, size);
+  	// calc3BandEqBlock(400,8000, 24000, buf, size);
 
+
+	// rstephane : simpler biquad filter 
+	//if (maskType>2)
+  	//	calcBiquadBlock(buf,  size);
 	// ------------------------------------------------
 
 	//channel volume

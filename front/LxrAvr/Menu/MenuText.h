@@ -447,6 +447,14 @@ const char longNames[][16] PROGMEM =
 	{"Start Loop"}, // rstephane: DIVIDE LONG text
 	{"End Loop"}, // rstephane: LOOP LONG text
 	// -- to do add the Alien Wah effects long name??
+	// rstephane ---------
+	{"OTO FX"}, // rstephane: OTO mode
+	{"OTO AMOUNT"}, // rstephane: OTO amount
+	
+	{"ALienWah dly"}, // rstephane: Alien Wah
+	{"AlienWah frq"},
+	{"AlienWah phs"},
+	{"ALienWah amt"}, // Alien Wah Feedback, used to swith On. Off the effect
 
 };
 

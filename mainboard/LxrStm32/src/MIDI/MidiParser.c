@@ -62,10 +62,10 @@ uint8_t otoAmount; // amount OTO effects
 
 uint8_t randomType=0; // 0-16 for OTO effects
 
- float freq; // for Alien Wah effect
- float startphase;
- float fb;
- int delay;
+ uint8_t freq=0; // for Alien Wah effect
+ uint8_t startphase=0;
+ uint8_t fb=0;
+ uint8_t delay=0;
 
 uint8_t AlienWahOnOff=0; // ALien Wah ON/OFF based on the Feedback Value (fb), if = 0 then ALien is OFF
 
@@ -1105,37 +1105,27 @@ void midiParser_ccHandler(MidiMsg msg, uint8_t updateOriginalValue)
 			case CC2_OTO_AMOUNT:
 					// ------ Set OTO effects amount (0 to 127, Dry to Wet)
 					otoAmount = msg.data2;
-
 				break;	
 			//
 			// 
 			// rstephane : Handle the Alien Wah EFFECT button
 			case CC2_ALIEN_FB:
-				if(msg.data2>0)
-				{
+				//if(msg.data2>0)
+				//{
 					AlienWahOnOff=1;
 					fb=msg.data2; // for Alien Wah effect
-				}
-				else if(msg.data2==0)
-					AlienWahOnOff=0; 
+				//}
+				//else if(msg.data2==0)
+				//	AlienWahOnOff=0; 
 				break;	
 			case CC2_ALIEN_DELAY:
-				if(msg.data2>0)
-				{
-					delay=msg.data2; // for Alien Wah effect
-				}
+				delay=msg.data2; // for Alien Wah effect
 				break;	
 			case CC2_ALIEN_FREQ:
-				if(msg.data2>0)
-				{
-					freq=msg.data2; // for Alien Wah effect
-				}
+				freq=msg.data2; // for Alien Wah effect
 				break;	
 			case CC2_ALIEN_STARTPHASE:
-				if(msg.data2>0)
-				{
-					startphase=msg.data2; // for Alien Wah effect
-				}
+				startphase=msg.data2; // for Alien Wah effect
 				break;	
 			//
 			// rstephane : Handle the LOOP button
