@@ -1085,10 +1085,25 @@ void midiParser_ccHandler(MidiMsg msg, uint8_t updateOriginalValue)
 				if(msg.data2 == 1)
 					randomDrumVoice(2,randomType);
 				break;	
-			
+			case CC2_RND_VOICE4:
+				if(msg.data2 == 1)
+					randomSnareVoice(randomType);
+				break;	
+			case CC2_RND_VOICE5:
+				if(msg.data2 == 1)
+					randomCymVoice(randomType);
+				break;	
+			case CC2_RND_VOICE6:
+				if(msg.data2 == 1)
+					randomHHVoice(randomType);
+				break;	
+					
 			case CC2_RND_MASKTYPE1:
 			case CC2_RND_MASKTYPE2:
 			case CC2_RND_MASKTYPE3:
+			case CC2_RND_MASKTYPE4:
+			case CC2_RND_MASKTYPE5:
+			case CC2_RND_MASKTYPE6:
 					randomType= msg.data2;
 					break;	
 					
@@ -1287,13 +1302,13 @@ void midiParser_ccHandler(MidiMsg msg, uint8_t updateOriginalValue)
 					//seq_setPreRythmFill(6, msg.data2);
 				}
 				break;	
-			case CC2_PREFILLED_PATTERN7:
+			/*case CC2_PREFILLED_PATTERN7:
 				if(msg.data2>0)
 				{
 					// uint8_t VoiceNr, uint8_t msgdata2
 					seq_setPrePatternFill(7, msg.data2);
 					//seq_setPreRythmFill(7, msg.data2);
-				}
+				}*/
 			//
 			//
 			// rstephane : Handle the RANDOM FILL PATTERN  button
@@ -1346,16 +1361,13 @@ void midiParser_ccHandler(MidiMsg msg, uint8_t updateOriginalValue)
 					seq_setRandomPatternFill(6);
 				}
 				break;	
-			case CC2_RANDOMFILL_PATTERN7:
+			/*case CC2_RANDOMFILL_PATTERN7:
 				if(msg.data2>0)
 				{
 					// uint8_t VoiceNr, uint8_t msgdata2
 					seq_setRandomPatternFill(7);
 				}
-				break;	
-
-
-
+				break;	*/
 
 			default:
 				break;

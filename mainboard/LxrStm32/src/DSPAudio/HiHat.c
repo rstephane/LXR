@@ -41,7 +41,9 @@
 #include "TriggerOut.h"
 
 
+
 // rstephane  ---------
+#include "valueShaper.h"
 extern uint8_t maskType; // 0-16 for OTO effects
 extern uint8_t otoAmount; // 0-16 for OTO effects
 
@@ -216,4 +218,166 @@ void HiHat_calcSyncBlock(int16_t* buf, const uint8_t size)
 	calcDistBlock(&hatVoice.distortion,buf,size);
 }
 //---------------------------------------------------
+
+
+
+//---------------------------------------------------
+// rstephane : my functions
+//random all the parameters for voice HitHAt
+//---------------------------------------------------
+
+void randomHHVoice(uint8_t randomType)
+{				
+	switch(randomType)
+	{
+		case 1 : 
+			randomHHVoiceOSC();  
+ 			break;
+		case 2 :
+			randomHHVoiceADSR();  
+			break;
+		case 3 : 
+			randomHHVoiceDIST();  
+			break;
+		case 4 : 
+			randomHHVoiceFILTER();  
+			break;
+		case 5 : 
+			randomHHVoiceOSC();
+			randomHHVoiceADSR();  
+			break;
+		case 6 :
+			randomHHVoiceOSC();
+			randomHHVoiceFILTER();
+			break;
+		case 7 :
+			randomHHVoiceOSC();
+			randomHHVoiceDIST();
+			break;
+		case 8 : 
+			randomHHVoiceOSC();
+			randomHHVoiceFILTER();
+			break;
+		case 9 : 
+			randomHHVoiceDIST();
+			randomHHVoiceADSR();  
+			break;
+		case 10 : 
+			randomHHVoiceDIST();  
+			randomHHVoiceFILTER();
+		 	break;
+		case 11 : 
+			randomHHVoiceFILTER();
+			randomHHVoiceADSR();
+			break;
+		case 12 : 
+			randomHHVoiceADSR();  
+			randomHHVoiceOSC();  
+			randomHHVoiceDIST();  
+			break;
+		case 13 : 
+			randomHHVoiceOSC();  
+			randomHHVoiceFILTER();
+			randomHHVoiceDIST();  
+			break;
+		case 14 : 
+			randomHHVoiceDIST();  
+			randomHHVoiceFILTER();
+			randomHHVoiceADSR();
+			break;
+		case 15 :
+			randomHHVoiceOSC();  
+			randomHHVoiceFILTER();  
+			randomHHVoiceADSR();  
+ 			break;
+		case 16 :
+			randomHHVoiceOSC();  
+			randomHHVoiceDIST();  
+			randomHHVoiceFILTER();  
+			randomHHVoiceADSR();  
+ 			break;
+		
+		default: 
+			break;
+		break;	
+	}	
+
+}
+
+
+//---------------------------------------------------
+void randomHHVoiceOSC(void)
+{
+	uint8_t rndData;
+// F_OSC6_COARSE:
+	rndData = GetRndValue127();			
+	//clear upper nibble
+	hatVoice.osc.midiFreq &= 0x00ff;
+	//set upper nibble
+	hatVoice.osc.midiFreq |= rndData << 8;
+	osc_recalcFreq(&hatVoice.osc);
+// WAVE1_HH:
+	rndData = GetRndValue127();	
+	hatVoice.osc.waveform = rndData;
+		
+}
+
+//---------------------------------------------------
+void randomHHVoiceDIST(void)
+{
+		uint8_t rndData;
+
+// HAT_DISTORTION:
+	rndData = GetRndValue127();			
+	setDistortionShape(&hatVoice.distortion,rndData);
+				
+}
+
+//---------------------------------------------------
+void randomHHVoiceADSR(void)
+{
+	uint8_t rndData;
+
+// VELOD6:
+	rndData = GetRndValue127();			
+	hatVoice.decayClosed = slopeEg2_calcDecay(rndData);
+
+// VELOD6_OPEN:
+	rndData = GetRndValue127();			
+	hatVoice.decayOpen = slopeEg2_calcDecay(rndData);			
+			
+	
+}
+	
+//---------------------------------------------------
+void randomHHVoiceFILTER(void)
+{
+	uint8_t rndData;
+// HAT_FILTER_F:
+	rndData = GetRndValue127();			
+	const float f = rndData/127.f;
+	//exponential full range freq
+	SVF_directSetFilterValue(&hatVoice.filter,valueShaperF2F(f,FILTER_SHAPER) );
+
+// HAT_RESO:
+	rndData = GetRndValue127();			
+	SVF_setReso(&hatVoice.filter, rndData/127.f);
+
+// CC2_FILTER_TYPE_6:
+//Hihat filter
+	rndData = GetRndValue6();			
+	hatVoice.filterType = rndData+1;
+			
+			
+// CC2_FILTER_DRIVE_6:
+	rndData = GetRndValue127();			
+#if UNIT_GAIN_DRIVE
+	hatVoice.filter.drive = (rndData/127.f);
+#else
+	SVF_setDrive(&hatVoice.filter, rndData);
+#endif
+
+			
+}	
+
 

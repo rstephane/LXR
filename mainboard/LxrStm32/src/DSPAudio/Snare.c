@@ -42,6 +42,7 @@
 
 
 // rstephane  ---------
+#include "valueShaper.h"
 extern uint8_t maskType; // 0-16 for OTO effects
 extern uint8_t otoAmount; // 0-16 for OTO effects
 
@@ -202,3 +203,209 @@ void Snare_calcSyncBlock(int16_t* buf, const uint8_t size)
 	calcDistBlock(&snareVoice.distortion,buf,size);
 }
 //------------------------------------------------------------------------
+
+//---------------------------------------------------
+// rstephane : my functions
+//random all the parameters for voice SNARE
+//---------------------------------------------------
+
+void randomSnareVoice(uint8_t randomType)
+{				
+	switch(randomType)
+	{
+		case 1 : 
+			randomSnareVoiceOSC();  
+ 			break;
+		case 2 :
+			randomSnareVoiceADSR();  
+			break;
+		case 3 : 
+			randomSnareVoiceCLICK();  
+			break;
+		case 4 : 
+			randomSnareVoiceFILTER();  
+			break;
+		case 5 : 
+			randomSnareVoiceOSC();
+			randomSnareVoiceADSR();  
+			break;
+		case 6 :
+			randomSnareVoiceOSC();
+			randomSnareVoiceFILTER();
+			break;
+		case 7 :
+			randomSnareVoiceOSC();
+			randomSnareVoiceCLICK();
+			break;
+		case 8 : 
+			randomSnareVoiceOSC();
+			randomSnareVoiceFILTER();
+			break;
+		case 9 : 
+			randomSnareVoiceCLICK();
+			randomSnareVoiceADSR();  
+			break;
+		case 10 : 
+			randomSnareVoiceCLICK();  
+			randomSnareVoiceFILTER();
+		 	break;
+		case 11 : 
+			randomSnareVoiceFILTER();
+			randomSnareVoiceADSR();
+			break;
+		case 12 : 
+			randomSnareVoiceADSR();  
+			randomSnareVoiceOSC();  
+			randomSnareVoiceCLICK();  
+			break;
+		case 13 : 
+			randomSnareVoiceOSC();  
+			randomSnareVoiceFILTER();
+			randomSnareVoiceCLICK();  
+			break;
+		case 14 : 
+			randomSnareVoiceCLICK();  
+			randomSnareVoiceFILTER();
+			randomSnareVoiceADSR();
+			break;
+		case 15 :
+			randomSnareVoiceOSC();  
+			randomSnareVoiceFILTER();  
+			randomSnareVoiceADSR();  
+ 			break;
+		case 16 :
+			randomSnareVoiceOSC();  
+			randomSnareVoiceCLICK();  
+			randomSnareVoiceFILTER();  
+			randomSnareVoiceADSR();  
+ 			break;
+		
+		default: 
+			break;
+		break;	
+	}	
+
+}
+
+
+//---------------------------------------------------
+void randomSnareVoiceOSC(void)
+{
+		uint8_t rndData;
+// SNARE_NOISE_F:
+		rndData = GetRndValue127();	
+		snareVoice.noiseOsc.freq = rndData/127.f*22000;
+			
+// SNARE_DISTORTION:
+		rndData = GetRndValue127();	
+		setDistortionShape(&snareVoice.distortion,rndData);
+
+// SNARE_MIX:
+		rndData = GetRndValue127();	
+		snareVoice.mix = rndData/127.f;
+		
+// OSC_WAVE_SNARE:
+		rndData = GetRndValue6(); 
+		snareVoice.osc.waveform = rndData;
+		
+// F_OSC4_COARSE:
+		rndData = GetRndValue127();	
+		//rndDataTemp=calcRange(rndData, -63 ,+63,0,127);
+		
+		//clear upper nibble
+		snareVoice.osc.midiFreq &= 0x00ff;
+		//set upper nibble
+		snareVoice.osc.midiFreq |= rndData << 8;
+		osc_recalcFreq(&snareVoice.osc);
+
+// PITCH_SLOPE4:
+		rndData = GetRndValue127();	
+		DecayEg_setSlope(&snareVoice.oscPitchEg,rndData);
+				
+		
+}
+//---------------------------------------------------
+void randomSnareVoiceCLICK(void)
+{
+		uint8_t rndData;
+
+// CC2_TRANS4_WAVE:
+		// 0 - 14 
+		do {
+	        	rndData = GetRngValue();
+	        	rndData = rndData & 0x0000001F;
+	        } while ((rndData == 16) || (rndData == 15));
+		snareVoice.transGen.waveform = rndData;
+		
+// CC2_TRANS4_VOL:
+		rndData = GetRndValue127();	
+		snareVoice.transGen.volume = rndData/127.f;
+
+// CC2_TRANS4_FREQ:
+		rndData = GetRndValue127();			
+		snareVoice.transGen.pitch = 1.f + ((rndData/33.9f)-0.75f) ;
+
+}
+
+//---------------------------------------------------
+void randomSnareVoiceADSR(void)
+{
+	uint8_t rndData;
+
+// VELOA4:
+	rndData = GetRndValue127();	
+	slopeEg2_setAttack(&snareVoice.oscVolEg,rndData,false);
+// DECAY
+	rndData = GetRndValue127();	
+	slopeEg2_setDecay(&snareVoice.oscVolEg,rndData,false);
+				
+// REPEAT1:
+	rndData = GetRndValue127();	
+	snareVoice.oscVolEg.repeat = rndData;
+
+// EG_SNARE1_SLOPE:
+	rndData = GetRndValue127();	
+	slopeEg2_setSlope(&snareVoice.oscVolEg,rndData);
+				
+	
+}
+	
+//---------------------------------------------------
+void randomSnareVoiceFILTER(void)
+{
+		uint8_t rndData;
+		
+// SNARE_FILTER_F:
+		rndData = GetRndValue127();
+#if USE_PEAK
+		peak_setFreq(&snareVoice.filter, rndData/127.f*20000.f);
+#else
+		const float f = rndData/127.f;
+		//exponential full range freq
+		SVF_directSetFilterValue(&snareVoice.filter,valueShaperF2F(f,FILTER_SHAPER) );
+#endif
+
+// SNARE_RESO:
+		rndData = GetRndValue127();
+#if USE_PEAK
+		peak_setGain(&snareVoice.filter, rndData/127.f);
+#else
+		SVF_setReso(&snareVoice.filter, rndData/127.f);
+#endif
+
+// CC2_FILTER_TYPE_4:
+		rndData = GetRndValue7();
+		snareVoice.filterType = rndData + 1; // +1 because 0 is filter off which results in silence
+			
+// CC2_FILTER_DRIVE_4:
+		rndData = GetRndValue127();
+#if UNIT_GAIN_DRIVE
+		snareVoice.filter.drive = (rndData/127.f);
+#else
+		SVF_setDrive(&snareVoice.filter, rndData);
+#endif
+
+
+
+}	
+

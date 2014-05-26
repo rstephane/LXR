@@ -100,5 +100,18 @@ void Cymbal_calcAsync();
 //-0.5 = left 0=both max 0.5=right*/
 void Cymbal_setPan(const uint8_t pan);
 
+// ----------------------------------------------
+// rstephane : my functions
+//random all the parameters for voice HITHAT
+void randomCymVoice(uint8_t randomType);  
+void randomCymVoiceOSC(void);  
+void randomCymVoiceDIST(void);  
+void randomCymVoiceFILTER(void);  
+void randomCymVoiceADSR(void);  
+void randomCymVoiceFM(void);
+
+
+
+
 
 #endif /* CYMBALVOICE_H_ */

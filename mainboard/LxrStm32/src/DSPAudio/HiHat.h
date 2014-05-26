@@ -105,4 +105,15 @@ void HiHat_calcAsync();
 //-0.5 = left 0=both max 0.5=right*/
 void HiHat_setPan(const uint8_t pan);
 
+// ----------------------------------------------
+// rstephane : my functions
+//random all the parameters for voice HITHAT
+void randomHHVoice(uint8_t randomType);  
+void randomHHVoiceOSC(void);  
+void randomHHVoiceDIST(void);  
+void randomHHVoiceFILTER(void);  
+void randomHHVoiceADSR(void);  
+
+
+
 #endif /* HIHAT_H_ */

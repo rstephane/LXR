@@ -41,6 +41,7 @@
 
 
 // rstephane  ---------
+#include "valueShaper.h"
 extern uint8_t maskType; // 0-16 for OTO effects
 extern uint8_t otoAmount; // 0-16 for OTO effects
 
@@ -205,4 +206,191 @@ void Cymbal_calcSyncBlock(int16_t* buf, const uint8_t size)
 		calcDistBlock(&cymbalVoice.distortion,buf,size);
 }
 //---------------------------------------------------
+
+
+
+
+//---------------------------------------------------
+// rstephane : my functions
+//random all the parameters for Cymbal
+//---------------------------------------------------
+
+void randomCymVoice(uint8_t randomType)
+{				
+	switch(randomType)
+	{
+		case 1 : 
+			randomCymVoiceOSC();  
+ 			break;
+		case 2 :
+			randomCymVoiceADSR();  
+			break;
+		case 3 : 
+			randomCymVoiceFM();  
+			break;
+		case 4 : 
+			randomCymVoiceFILTER();  
+			break;
+		case 5 : 
+			randomCymVoiceDIST();
+			break;
+		case 6 :
+			randomCymVoiceOSC();
+			randomCymVoiceFILTER();
+			break;
+		case 7 :
+			randomCymVoiceOSC();
+			randomCymVoiceFM();
+			break;
+		case 8 : 
+			randomCymVoiceOSC();
+			randomCymVoiceADSR();  
+			break;
+		case 9 : 
+			randomCymVoiceDIST();
+			randomCymVoiceADSR();  
+			break;
+		case 10 : 
+			randomCymVoiceFM();  
+			randomCymVoiceFILTER();
+		 	break;
+		case 11 : 
+			randomCymVoiceFILTER();
+			randomCymVoiceADSR();
+			break;
+		case 12 : 
+			randomCymVoiceADSR();  
+			randomCymVoiceOSC();  
+			randomCymVoiceFM();  
+			break;
+		case 13 : 
+			randomCymVoiceOSC();  
+			randomCymVoiceFILTER();
+			randomCymVoiceFM();  
+			break;
+		case 14 : 
+			randomCymVoiceFM();  
+			randomCymVoiceFILTER();
+			randomCymVoiceADSR();
+			break;
+		case 15 :
+			randomCymVoiceOSC();  
+			randomCymVoiceFILTER();  
+			randomCymVoiceADSR();  
+ 			break;
+		case 16 :
+			randomCymVoiceOSC();  
+			randomCymVoiceDIST();  
+			randomCymVoiceFILTER();  
+			randomCymVoiceADSR();
+			randomCymVoiceFM();  
+ 			break;
+		
+		default: 
+			break;
+		break;	
+	}	
+
+}
+
+
+//---------------------------------------------------
+void randomCymVoiceOSC(void)
+{
+	uint8_t rndData;
+
+//F_OSC5_COARSE:
+	rndData = GetRndValue127();		
+	//clear upper nibble
+	cymbalVoice.osc.midiFreq &= 0x00ff;
+	//set upper nibble
+	cymbalVoice.osc.midiFreq |= rndData << 8;
+	osc_recalcFreq(&cymbalVoice.osc);
+
+// CYM_WAVE1:
+	rndData = GetRndValue6();		
+	cymbalVoice.osc.waveform = rndData;
+// CYM_WAVE2:
+	rndData = GetRndValue6();	
+	cymbalVoice.modOsc.waveform = rndData;
+// CYM_WAVE3:
+	rndData = GetRndValue6();	
+	cymbalVoice.modOsc2.waveform = rndData;
+// CYM_REPEAT:
+	rndData = GetRndValue6();	
+	cymbalVoice.oscVolEg.repeat = rndData;
+}
+
+//---------------------------------------------------
+void randomCymVoiceFM(void)
+{
+	uint8_t rndData;
+// CYM_MOD_OSC_F1:
+	rndData = GetRndValue127();	
+	//clear upper nibble
+	cymbalVoice.modOsc.midiFreq &= 0x00ff;
+	//set upper nibble
+	cymbalVoice.modOsc.midiFreq |= rndData << 8;
+	osc_recalcFreq(&cymbalVoice.modOsc);
+// CYM_MOD_OSC_F2:
+	rndData = GetRndValue127();	
+	//clear upper nibble
+	cymbalVoice.modOsc2.midiFreq &= 0x00ff;
+	//set upper nibble
+	cymbalVoice.modOsc2.midiFreq |= rndData << 8;
+	osc_recalcFreq(&cymbalVoice.modOsc2);
+// CYM_MOD_OSC_GAIN1:
+	rndData = GetRndValue127();	
+	cymbalVoice.fmModAmount1 = rndData/127.f;
+// CYM_MOD_OSC_GAIN2:
+	rndData = GetRndValue127();	
+	cymbalVoice.fmModAmount2 = rndData/127.f;
+
+								
+}
+//---------------------------------------------------
+void randomCymVoiceDIST(void)
+{
+	uint8_t rndData;
+	
+// CYMBAL_DISTORTION:
+	rndData = GetRndValue127();	
+	setDistortionShape(&cymbalVoice.distortion,rndData);
+								
+}
+
+//---------------------------------------------------
+void randomCymVoiceADSR(void)
+{
+	uint8_t rndData;
+// VELOA5:
+	rndData = GetRndValue127();	
+	slopeEg2_setAttack(&cymbalVoice.oscVolEg,rndData,false);
+// VELOD5:
+	rndData = GetRndValue127();	
+	slopeEg2_setDecay(&cymbalVoice.oscVolEg,rndData,false);
+			
+// CYM_SLOPE:
+	rndData = GetRndValue127();	
+	slopeEg2_setSlope(&cymbalVoice.oscVolEg,rndData);
+}
+	
+//---------------------------------------------------
+void randomCymVoiceFILTER(void)
+{
+	uint8_t rndData;
+
+// CYM_FIL_FREQ:
+	rndData = GetRndValue127();	
+	const float f = rndData/127.f;
+	//exponential full range freq
+	SVF_directSetFilterValue(&cymbalVoice.filter,valueShaperF2F(f,FILTER_SHAPER) );
+
+// CYM_RESO:
+	rndData = GetRndValue127();	
+	SVF_setReso(&cymbalVoice.filter, rndData/127.f);
+		
+}	
+
+
 

@@ -108,4 +108,15 @@ void Snare_calcAsync();
 
 //-0.5 = left 0=both max 0.5=right*/
 void Snare_setPan(const uint8_t pan);
+
+// ----------------------------------------------
+// rstephane : my functions
+//random all the parameters for voice HITHAT
+void randomSnareVoice(uint8_t randomType);  
+void randomSnareVoiceOSC(void);  
+void randomSnareVoiceCLICK(void);  
+void randomSnareVoiceFILTER(void);  
+void randomSnareVoiceADSR(void);  
+
+
 #endif /* SNARE_H_ */
