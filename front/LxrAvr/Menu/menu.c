@@ -478,7 +478,7 @@ const enum Datatypes PROGMEM parameter_dtypes[NUM_PARAMS] = {
 	    /*PAR_OTO*/		DTYPE_1B16,  // rstephane : OTO MODE
 	    /*PAR_OTO_AMOUNT*/	DTYPE_0B127,// rstephane : amount
 	    
-	    /*PAR_PREFILLED_PATTERN0*/	DTYPE_0B127, // rstephane : Prefilled Pattern
+	    // rstephane : Prefilled Pattern
 	    /*PAR_PREFILLED_PATTERN1*/	DTYPE_0B127,
 	    /*PAR_PREFILLED_PATTERN2*/	DTYPE_0B127,
 	    /*PAR_PREFILLED_PATTERN3*/	DTYPE_0B127,
@@ -487,7 +487,7 @@ const enum Datatypes PROGMEM parameter_dtypes[NUM_PARAMS] = {
 	    /*PAR_PREFILLED_PATTERN6*/	DTYPE_0B127,
 	    /*PAR_PREFILLED_PATTERN7	DTYPE_0B127, */
 	    
-	    /*PAR_RANDOMFILL_PATTERN0*/	DTYPE_ON_OFF, // rstephane : RANDOMFILL Pattern
+	    // rstephane : RANDOMFILL Pattern
 	    /*PAR_RANDOMFILL_PATTERN1*/	DTYPE_ON_OFF,
 	    /*PAR_RANDOMFILL_PATTERN2*/	DTYPE_ON_OFF,
 	    /*PAR_RANDOMFILL_PATTERN3*/	DTYPE_ON_OFF,

@@ -1251,25 +1251,18 @@ void midiParser_ccHandler(MidiMsg msg, uint8_t updateOriginalValue)
 			//
 			//
 			// rstephane : Handle the PREFILLED PATTERN  button
-			case CC2_PREFILLED_PATTERN0:
+				case CC2_PREFILLED_PATTERN1:
 				if(msg.data2>0)
 				{
 					// uint8_t VoiceNr, uint8_t msgdata2
 					seq_setPrePatternFill(0, msg.data2);
 				}
 				break;	
-			case CC2_PREFILLED_PATTERN1:
-				if(msg.data2>0)
-				{
-					// uint8_t VoiceNr, uint8_t msgdata2
-					seq_setPrePatternFill(1, msg.data2);
-				}
-				break;	
 			case CC2_PREFILLED_PATTERN2:
 				if(msg.data2>0)
 				{
 					// uint8_t VoiceNr, uint8_t msgdata2
-					seq_setPrePatternFill(2, msg.data2);
+					seq_setPrePatternFill(1, msg.data2);
 					//seq_setPreRythmFill(2, msg.data2);
 				}
 				break;	
@@ -1277,28 +1270,28 @@ void midiParser_ccHandler(MidiMsg msg, uint8_t updateOriginalValue)
 				if(msg.data2>0)
 				{
 					// uint8_t VoiceNr, uint8_t msgdata2
-					seq_setPrePatternFill(3, msg.data2);
+					seq_setPrePatternFill(2, msg.data2);
 				}
 				break;	
 			case CC2_PREFILLED_PATTERN4:
 				if(msg.data2>0)
 				{
 					// uint8_t VoiceNr, uint8_t msgdata2
-					seq_setPrePatternFill(4, msg.data2);
+					seq_setPrePatternFill(3, msg.data2);
 				}
 				break;	
 			case CC2_PREFILLED_PATTERN5:
 				if(msg.data2>0)
 				{
 					// uint8_t VoiceNr, uint8_t msgdata2
-					seq_setPrePatternFill(5, msg.data2);
+					seq_setPrePatternFill(4, msg.data2);
 				}
 				break;	
 			case CC2_PREFILLED_PATTERN6:
 				if(msg.data2>0)
 				{
 					// uint8_t VoiceNr, uint8_t msgdata2
-					seq_setPrePatternFill(6, msg.data2);
+					seq_setPrePatternFill(5, msg.data2);
 					//seq_setPreRythmFill(6, msg.data2);
 				}
 				break;	
@@ -1312,53 +1305,46 @@ void midiParser_ccHandler(MidiMsg msg, uint8_t updateOriginalValue)
 			//
 			//
 			// rstephane : Handle the RANDOM FILL PATTERN  button
-			case CC2_RANDOMFILL_PATTERN0:
-				if(msg.data2>0)
-				{
-					// uint8_t VoiceNr, uint8_t msgdata2
-					seq_setRandomPatternFill(0);
-				}
-				break;	
 			case CC2_RANDOMFILL_PATTERN1:
 				if(msg.data2>0)
 				{
 					// uint8_t VoiceNr, uint8_t msgdata2
-					seq_setRandomPatternFill(1);				
+					seq_setRandomPatternFill(0);				
 				}
 				break;	
 			case CC2_RANDOMFILL_PATTERN2:
 				if(msg.data2>0)
 				{
 					// uint8_t VoiceNr, uint8_t msgdata2
-					seq_setRandomPatternFill(2);
+					seq_setRandomPatternFill(1);
 				}
 				break;	
 			case CC2_RANDOMFILL_PATTERN3:
 				if(msg.data2>0)
 				{
 					// uint8_t VoiceNr, uint8_t msgdata2
-					seq_setRandomPatternFill(3);
+					seq_setRandomPatternFill(2);
 				}
 				break;	
 			case CC2_RANDOMFILL_PATTERN4:
 				if(msg.data2>0)
 				{
 					// uint8_t VoiceNr, uint8_t msgdata2
-					seq_setRandomPatternFill(4);
+					seq_setRandomPatternFill(3);
 				}
 				break;	
 			case CC2_RANDOMFILL_PATTERN5:
 				if(msg.data2>0)
 				{
 					// uint8_t VoiceNr, uint8_t msgdata2
-					seq_setRandomPatternFill(5);
+					seq_setRandomPatternFill(4);
 				}
 				break;	
 			case CC2_RANDOMFILL_PATTERN6:
 				if(msg.data2>0)
 				{
 					// uint8_t VoiceNr, uint8_t msgdata2
-					seq_setRandomPatternFill(6);
+					seq_setRandomPatternFill(5);
 				}
 				break;	
 			/*case CC2_RANDOMFILL_PATTERN7:

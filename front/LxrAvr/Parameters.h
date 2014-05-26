@@ -320,7 +320,7 @@ enum ParamEnums
 	PAR_OTO,					// rstephane: OTO FX mode 
 	PAR_OTO_AMOUNT,					// rstephane: AMOUNT 
 		
-	PAR_PREFILLED_PATTERN0, 			// rstephane: Prefilled pattern
+	// rstephane: Prefilled pattern
 	PAR_PREFILLED_PATTERN1, 
 	PAR_PREFILLED_PATTERN2, 
 	PAR_PREFILLED_PATTERN3, 
@@ -328,7 +328,7 @@ enum ParamEnums
 	PAR_PREFILLED_PATTERN5,
 	PAR_PREFILLED_PATTERN6,
 	//PAR_PREFILLED_PATTERN7,  
-	PAR_RANDOMFILL_PATTERN0, 			// rstephane: RANDOMFILL pattern
+	// rstephane: RANDOMFILL pattern
 	PAR_RANDOMFILL_PATTERN1, 
 	PAR_RANDOMFILL_PATTERN2, 
 	PAR_RANDOMFILL_PATTERN3, 
