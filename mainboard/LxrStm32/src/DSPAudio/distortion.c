@@ -223,7 +223,8 @@ void calcOTOFxBlock(uint8_t maskType, int16_t* buf,const uint8_t size, uint8_t o
 			break;
 		case 14 : 
 			for(i=0;i<size;i++)
-				bufTemp[i] &= 0x01009009; 
+				//bufTemp[i] &= 0x01009009; 
+				bufTemp[i] = (int16_t) BassBoost((float) bufTemp[i]);
 			break;
 		case 15 : 
 			//Parameter calculation
@@ -243,7 +244,6 @@ void calcOTOFxBlock(uint8_t maskType, int16_t* buf,const uint8_t size, uint8_t o
 			   bufTemp[i] = v1; // Low pass
 			}			
 			break;
-		
 		default: 
 			maskType = 0;
 			break;
@@ -385,3 +385,47 @@ void calcAlienWahFxBlock(uint8_t freq,uint8_t startphase,uint8_t fb,int8_t delay
 	
 	
 }
+
+/* Params:
+selectivity - frequency response of the LP (higher value gives a steeper one) [70.0 to 140.0 sounds good]
+ratio - how much of the filtered signal is mixed to the original
+gain2 - adjusts the final volume to handle cut-offs (might be good to set dynamically) */
+
+
+ float saturate( float input ) { 
+//clamp without branching
+#define _limit 0.95
+  float x1 = fabsf( input + _limit );
+  float x2 = fabsf( input - _limit );
+  return 0.5 * (x1 - x2);
+}
+
+float MAX( float a, float b) {
+  a -= b;
+  a += fabsf( a );
+  a *= 0.5;
+  a += b;
+  return a;
+}
+
+
+float MIN( float a, float b) {
+  a = b - a;
+  a += fabsf( a );
+  a *= 0.5;
+  a = b - a;
+  return a;
+}
+
+
+float BassBoost(float sample)
+{
+static float selectivity = 100.0, gain1= 50.0, gain2= 50.0, ratio = 50.0, cap;
+gain1 = 1.0/(selectivity + 1.0);
+
+cap= (sample + cap*selectivity )*gain1;
+sample = saturate((sample + cap*ratio)*gain2);
+
+return sample;
+}
+

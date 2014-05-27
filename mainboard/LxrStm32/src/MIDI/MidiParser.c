@@ -58,7 +58,7 @@ uint8_t originalTrackLength [NUM_TRACKS];
 uint8_t i,armLoop=0;
 uint8_t armDivideOnOff=0;
 uint8_t maskType=0; // 0-16 for OTO effects
-uint8_t otoAmount; // amount OTO effects
+uint8_t otoAmount=0; // amount OTO effects
 
 uint8_t randomType=0; // 0-16 for OTO effects
 
