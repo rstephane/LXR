@@ -54,11 +54,18 @@
 
 //-----------------------------------------
 // rstephane: to save orginal track lenght for the LOOP function
-uint8_t originalTrackLength [NUM_TRACKS];
-uint8_t i,armLoop=0;
-uint8_t armDivideOnOff=0;
-uint8_t maskType=0; // 0-16 for OTO effects
-uint8_t otoAmount=0; // amount OTO effects
+//uint8_t originalTrackLength [NUM_TRACKS];
+//uint8_t i,armLoop=0;
+//uint8_t armDivideOnOff=0;
+
+uint8_t i;
+
+uint8_t fx1MaskType=0; // 0-16 for OTO effects
+uint8_t fx1Amount=0; // amount OTO effects
+
+uint8_t fx2MaskType=0; // 0-16 for OTO effects
+uint8_t fx2Amount=0; // amount OTO effects
+
 
 uint8_t randomType=0; // 0-16 for OTO effects
 
@@ -1109,17 +1116,31 @@ void midiParser_ccHandler(MidiMsg msg, uint8_t updateOriginalValue)
 					
 			//
 			//
-			// rstephane : Handle the OTO EFFECT button
-			case CC2_OTO:
+			// rstephane : Handle the FX1 EFFECT button
+			case CC2_FX1:
 				if(msg.data2>0)
 				{
-					// ------ TEST OTO effects
-					maskType=msg.data2;
+					// ------ TEST OTO effects 2
+					fx1MaskType=msg.data2;
 				}
 				break;	
-			case CC2_OTO_AMOUNT:
-					// ------ Set OTO effects amount (0 to 127, Dry to Wet)
-					otoAmount = msg.data2;
+			case CC2_FX1_AMOUNT:
+					// ------ Set OTO effects 2 amount (0 to 127, Dry to Wet)
+					fx1Amount = msg.data2;
+				break;	
+			//
+			//
+			// rstephane : Handle the FX2 EFFECT button
+			case CC2_FX2:
+				if(msg.data2>0)
+				{
+					// ------ TEST OTO effects 2
+					fx2MaskType=msg.data2;
+				}
+				break;	
+			case CC2_FX2_AMOUNT:
+					// ------ Set OTO effects 2 amount (0 to 127, Dry to Wet)
+					fx2Amount = msg.data2;
 				break;	
 			//
 			// 
@@ -1144,8 +1165,8 @@ void midiParser_ccHandler(MidiMsg msg, uint8_t updateOriginalValue)
 				break;	
 			//
 			// rstephane : Handle the LOOP button
-			//
-			case CC2_LOOP:
+			// END
+			/*case CC2_LOOP:
 				 // ARM the looping function 
 				if (((msg.data2<16)&&(msg.data2>12)) && (armLoop == 0))
 				{	
@@ -1194,12 +1215,13 @@ void midiParser_ccHandler(MidiMsg msg, uint8_t updateOriginalValue)
 					// we restore the orginal tracks lenght
 					for (i=0; i<NUM_TRACKS; i++)
 					 	seq_setTrackLength(i,originalTrackLength [i]);
-				}
-				break;	
+				} 
+				break;
+				*/	
 			//
 			// rstephane : Handle the DIVIDE button
-			//
-			case CC2_DIVIDE:
+			// START
+			/*case CC2_DIVIDE:
 				if ((msg.data2 >=1)&&(msg.data2 <2))
 				{	
 					armDivide = 0; 
@@ -1247,7 +1269,7 @@ void midiParser_ccHandler(MidiMsg msg, uint8_t updateOriginalValue)
 					armDivide = 0; // we swith on the start / divide effects
 					armDivideOnOff = 0;
 				}
-				break;	
+				break;	*/
 			//
 			//
 			// rstephane : Handle the PREFILLED PATTERN  button

@@ -53,9 +53,12 @@
 
 
 // rstephane  ---------
-extern uint8_t randomType; // 0-16 for OTO effects
-extern uint8_t maskType; // 0-16 for OTO effects
-extern uint8_t otoAmount; // 0-127 for OTO effects
+extern uint8_t randomType; // 0-16
+
+extern uint8_t fx1MaskType; // 0-16 for effects 1
+extern uint8_t fx1Amount; // amount for effects 1
+extern uint8_t fx2MaskType; // 0-16 for effects 2
+extern uint8_t fx2Amount; // amount for effects 2
 
 extern uint8_t freq; // for Alien Wah effect 0 - 127 -> 0.0 to 1.0
 extern uint8_t startphase; // 0.0 to 1.0
@@ -290,9 +293,16 @@ void calcDrumVoiceSyncBlock(const uint8_t voiceNr, int16_t* buf, const uint8_t s
 	//rstephane: OTO effect alike ;-)
   	// works fine!
   	//(uint8_t maskType, int16_t* buf,const uint8_t size, uint8_t otoAmount)
-  	if (maskType>0)
-		calcOTOFxBlock(maskType,buf, size, otoAmount);
-  		
+  	// --------------------------------------------------
+	//rstephane: OTO effect alike ;-)
+  		if (fx1MaskType>0)
+  			calcFx1Block(fx1MaskType,buf, size,fx1Amount);
+ 		
+ 	// other fx :-)
+ 		if (fx2MaskType>0)
+  			calcFx2Block(fx2MaskType,buf, size,fx2Amount);
+ 
+ 	
   	// rstephane: Alien Wah effect, 
   	// to put it one day as very nice, with four parameters
   	// works fine!

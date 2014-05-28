@@ -194,10 +194,10 @@ enum NamesEnum
 	TEXT_RND_MASKTYPE,
 	TEXT_PREFILLED_PATTERN, 	// rstephane: Prefilled pattern	
 	TEXT_RANDOMFILL_PATTERN, 	// rstephane: RANDOMfilled pattern	
-	TEXT_DIVIDE,	// rstephane: DIVIDE text 
-	TEXT_LOOP,	// rstephane: LOOP text
-	TEXT_OTO,	// rstephane : OTO
-	TEXT_OTO_AMOUNT,  // rstephane : Amount
+	TEXT_FX1_AMOUNT,	// rstephane: FX1 
+	TEXT_FX1,	// rstephane: amount
+	TEXT_FX2,	// rstephane : FX2
+	TEXT_FX2_AMOUNT,  // rstephane : Amount
 	// rstephane : Alien Wah
 	TEXT_ALIEN_DELAY,
 	TEXT_ALIEN_FREQ,
@@ -300,10 +300,10 @@ enum shortNamesEnum
 	
 	SHORT_PREFILLED_PATTERN, // rstephane: Prefilled pattern
 	SHORT_RANDOMFILL_PATTERN,  // rstephane : random pattern fill text
-	SHORT_DIVIDE, // rstephane : short text DIVIDE
-	SHORT_LOOP, // rstephane : short text LOOP
-	SHORT_OTO,
-	SHORT_OTO_AMOUNT,
+	SHORT_FX1_AMOUNT, // rstephane : FX1 amount 
+	SHORT_FX1, // rstephane : FX1 mode
+	SHORT_FX2,
+	SHORT_FX2_AMOUNT,
 	// rstephane : Alien Wah
 	SHORT_ALIEN_DELAY,
 	SHORT_ALIEN_FREQ,
@@ -426,10 +426,10 @@ enum longNamesEnum
 	
 	LONG_PREFILLED_PATTERN,		// rstephane: Prefilled pattern
 	LONG_RANDOMFILL_PATTERN , // rstephane : random pattern fill text
-	LONG_DIVIDE, // rstephane: long text DIVIDE
-	LONG_LOOP, // rstephane: long text LOOP
-	LONG_OTO,
-	LONG_OTO_AMOUNT,
+	LONG_FX1_AMOUNT, // rstephane : FX1 amount 
+	LONG_FX1, // rstephane : FX1 mode
+	LONG_FX2,
+	LONG_FX2_AMOUNT,
 	// rstephane : Alien Wah
 	LONG_ALIEN_DELAY,
 	LONG_ALIEN_FREQ,

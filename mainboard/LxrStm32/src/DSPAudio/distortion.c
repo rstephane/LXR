@@ -50,6 +50,11 @@
 #define BIT(x) (0x01 << (x))
 #define LONGBIT(x) ((unsigned long)0x00000001 << (x))
 
+// for FX1 and 2
+extern uint8_t fx1MaskType; // 0-16 for effects 1
+extern uint8_t fx1Amount; // amount for effects 1
+extern uint8_t fx2MaskType; // 0-16 for effects 2
+extern uint8_t fx2Amount; // amount for effects 2
 
 // rstephane : Alien Wah
 #define samplerate 44100     
@@ -98,7 +103,7 @@ float distortion_calcSampleFloat(const Distortion *dist, float x)
 	return (1+dist->shape)*x/(1+dist->shape*fabsf(x));
 }
 
-// rstephane : Range funciton 
+// rstephane : Range function 
 float calcRange(uint8_t valueAmount, float old_min ,float old_max,float new_min,float new_max )
 {
 	float knobValue;
@@ -106,8 +111,8 @@ float calcRange(uint8_t valueAmount, float old_min ,float old_max,float new_min,
 	return knobValue;
 }
 
-// rstephane : OTO biscuit FX 
-void calcOTOFxBlock(uint8_t maskType, int16_t* buf,const uint8_t size, uint8_t otoAmount)
+// rstephane : FX 1 ----> OTO biscuit FX 
+void calcFx1Block(uint8_t maskType, int16_t* buf,const uint8_t size, uint8_t fxAmount)
 {
 	
 		
@@ -131,8 +136,8 @@ void calcOTOFxBlock(uint8_t maskType, int16_t* buf,const uint8_t size, uint8_t o
 	float wetFloatTemp;
 	
 	// knob Value (0 to 127 <--> 0 to 1) 
-	// knobValue = (  ( (otoAmount - old_min) / (old_max - old_min) ) * (new_max - new_min) + new_min  );
-	knobValue = calcRange(otoAmount, old_min , old_max, new_min, new_max );
+	// knobValue = (  ( (Amount - old_min) / (old_max - old_min) ) * (new_max - new_min) + new_min  );
+	knobValue = calcRange(fxAmount, old_min , old_max, new_min, new_max );
 	
 	dry = (1-knobValue);
 	wet = fabs((1-knobValue)-1);
@@ -224,7 +229,8 @@ void calcOTOFxBlock(uint8_t maskType, int16_t* buf,const uint8_t size, uint8_t o
 		case 14 : 
 			for(i=0;i<size;i++)
 				//bufTemp[i] &= 0x01009009; 
-				bufTemp[i] = (int16_t) BassBoost((float) bufTemp[i]);
+				bufTemp[i] = bufTemp[i] >> 5; 
+				//bufTemp[i] = (int16_t) BassBoost((float) bufTemp[i]);
 			break;
 		case 15 : 
 			//Parameter calculation
@@ -245,6 +251,163 @@ void calcOTOFxBlock(uint8_t maskType, int16_t* buf,const uint8_t size, uint8_t o
 			}			
 			break;
 		default: 
+			fx1MaskType = 0; // we switch off the effect 1
+			maskType = 0;
+			break;
+		break;	
+	}	
+
+// We merge the Dry and Wet Signal
+if (maskType!=0)
+	for(i=0;i<size;i++)
+	{
+		dryFloatTemp = (float) (buf[i]) * dry;
+		wetFloatTemp = (float) (bufTemp[i]) * wet;
+		buf[i] = wetFloatTemp + dryFloatTemp ;
+	}
+
+}
+
+
+//-------------------------------
+// rstephane : FX 2
+void calcFx2Block(uint8_t maskType, int16_t* buf,const uint8_t size, uint8_t fxAmount)
+{
+	
+		
+	uint8_t i,j;
+	uint16_t temp;
+	int16_t bufTemp[size];
+	
+	
+	// for a strange effect derived from moog filter from musicdsp.org
+	float c , r ,v0,v1;
+	
+	// TO change the range from 0 to 127 to 0.0 to 1.0
+	float old_min = 0;
+	float old_max = 127;
+	float new_min = 0.0;
+	float new_max = 1.0;
+	float knobValue, dry, wet;
+	
+	// dry and Wet infor
+	float dryFloatTemp;
+	float wetFloatTemp;
+	
+	// knob Value (0 to 127 <--> 0 to 1) 
+	// knobValue = (  ( (Amount - old_min) / (old_max - old_min) ) * (new_max - new_min) + new_min  );
+	knobValue = calcRange(fxAmount, old_min , old_max, new_min, new_max );
+	
+	dry = (1-knobValue);
+	wet = fabs((1-knobValue)-1);
+	
+	// WE copy the Sounds before manipulating it 
+	for(i=0;i<size;i++)
+		bufTemp[i] = buf[i] ;
+					
+	switch(maskType)
+	{
+		case 1 : 
+			for(i=0;i<size;i++)
+				bufTemp[i] &= 0x01001010; // ou 7F avce en plus COA à 0 !!!
+			break;
+		case 2 :
+			for(i=0;i<size;i++)
+				bufTemp[i] &= 0x0000000F; // remove 12 TOP BIts 16 bits to 8 bitmap 
+			break;
+		case 3 : 
+			for(i=0;i<size;i++)
+				bufTemp[i] &= 0x00000F7F; // remove 8 TOP BIts 16 bits to 8 bitmap 
+			break;
+		case 4 : 
+			for(i=0;i<size;i++)
+				bufTemp[i] = bufTemp[i] >> 1 ;	
+			break;
+		case 5 : 
+			for(i=0;i<size;i++)
+				bufTemp[i] = bufTemp[i] >> 2 ;	
+			break;
+		case 6 :
+			for(i=0;i<size;i++)
+			{
+				bufTemp[i] = bufTemp[i] >> 3 ;	
+			}
+			break;
+		/* nice effect !!!!
+		case 6 :
+			for(i=0;i<size;i++)
+			{
+				bufTemp[i] = buf[i] << 3 ;
+		 	
+				dryFloatTemp = (float) buf[i] * dry;
+				wetFloatTemp = (float) bufTemp[i] * wet;
+				buf[i] = (uint16_t) dryFloatTemp + (uint16_t) wetFloatTemp ;
+		 	} 
+			break;
+		*/
+		case 7 :
+			for(i=0;i<size;i++)
+				bufTemp[i] = bufTemp[i] >> 5 ;		
+			break;
+		
+		
+		
+		case 8 : 
+			for(i=0;i<size;i++)
+				bufTemp[i] = bufTemp[i] >> 6 ;		
+			break;
+		
+		case 9 : // reverse all bit 1 becomes 0 :-)
+			for(i=0;i<size;i++)
+			{
+			
+				for (j=0;j<16;j++)
+					temp = bit_flip(bufTemp[i],BIT(j));
+				bufTemp[i] = temp;
+			}			
+			break;
+		case 10 : 
+			for(i=0;i<size;i++)
+				bufTemp[i] &= (0x0000F000);	
+		 	break;
+		case 11 : // bof
+			for(i=0;i<size;i++)
+				bufTemp[i] &= 0x0000E7FF; 
+			break;
+		case 12 : 
+			for(i=0;i<size;i++)
+				bufTemp[i] &= 0x00000087; 
+			break;
+		case 13 : 
+			for(i=0;i<size;i++)
+				bufTemp[i] &= 0x0000F7FF; 
+			break;
+		case 14 : 
+			for(i=0;i<size;i++)
+				//bufTemp[i] &= 0x01009009; 
+				bufTemp[i] = bufTemp[i] % 5; 
+				//bufTemp[i] = (int16_t) BassBoost((float) bufTemp[i]);
+			break;
+		case 15 : 
+			//Parameter calculation
+			//cutoff and resonance are from 0 to 127
+			//   c = pow(0.5, (128-cutOff)   / 16.0);
+			// r = pow(0.5, (resonance+24) / 16.0);
+
+			 c = pow(0.5, (128-35)   / 16.0);
+			 r = pow(0.5, (40+24) / 16.0);
+			
+			//Loop:
+			v0 = v1 = 0;
+			for ( i=0; i < size; i++ ) {
+			   v0 =  (1-r*c)*v0  -  (c)*v1  + (c)*bufTemp[i];
+			   v1 =  (1-r*c)*v1  +  (c)*v0;
+
+			   bufTemp[i] = v1; // Low pass
+			}			
+			break;
+		default: 
+			fx2MaskType = 0; // we switch off the effect 1
 			maskType = 0;
 			break;
 		break;	

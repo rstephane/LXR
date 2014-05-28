@@ -315,10 +315,10 @@ enum ParamEnums
 	PAR_RND_MASKTYPE5,
 	PAR_RND_MASKTYPE6,
 		
-	PAR_LOOP,					// rstephane: loop 
-	PAR_DIVIDE,					// rstephane: DIVIDE 
-	PAR_OTO,					// rstephane: OTO FX mode 
-	PAR_OTO_AMOUNT,					// rstephane: AMOUNT 
+	PAR_FX1_AMOUNT,					// rstephane: loop 
+	PAR_FX1,					// rstephane: DIVIDE 
+	PAR_FX2,					// rstephane: OTO FX mode 
+	PAR_FX2_AMOUNT,					// rstephane: AMOUNT 
 		
 	// rstephane: Prefilled pattern
 	PAR_PREFILLED_PATTERN1, 

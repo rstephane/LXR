@@ -52,6 +52,12 @@
 #include "SomGenerator.h"
 #include "TriggerOut.h"
 
+//rstephane: armDivide initialized
+uint8_t originalTrackLength [NUM_TRACKS];
+uint8_t armDivide=0;
+uint8_t armDivideOnOff=0;
+uint8_t armLoop=0; // for loop/divide function
+
 static void frontParser_handleMidiMessage();
 static void frontParser_handleSysexData(unsigned char data);
 static void frontParser_handleSeqCC();
@@ -864,6 +870,29 @@ static void frontParser_handleSeqCC()
 		const uint8_t onOff = frontParser_midiMsg.data2 >> 4;
 		const uint8_t voice = frontParser_midiMsg.data2 & 0xf;
 		seq_setRoll(voice,onOff);
+		
+		//-------------------------------------------------------------------------
+		// rstephane LOOP DIVIDE when pressing step sequence keys from 8 to 16...
+		if (armLoop == 0) // first time we call the Loop / Divide effects 
+		{		// we save the tracks lenght<
+			armLoop =1; // we swith on the loopin effects
+			// we backup the tracks lenght
+			int i;
+			for (i=0; i<NUM_TRACKS; i++)
+				 	originalTrackLength [i] = seq_getTrackLength(i);		
+			}
+			if (voice==8) 
+			{
+				armLoop =0; // we swith OFF the loopin effects
+				int i;
+				for (i=0; i<NUM_TRACKS; i++)
+			 		seq_setTrackLength(i,originalTrackLength [i]);
+	
+				armDivide = 0; // we swith on the start / divide effects
+				armDivideOnOff = 0;
+			}
+			else 
+				seq_setLoopDivide(voice);
 	}
 		break;
 

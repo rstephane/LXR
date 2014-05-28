@@ -136,9 +136,10 @@ uint8_t prefilledPattern [72][16] =
 
 //----------------
 //rstephane: armDivide initialized
-uint8_t armDivide;
-uint8_t armDivideOnOff;
-
+extern uint8_t armDivide;
+extern uint8_t armDivideOnOff;
+//uint8_t armLoop=0; // for loop/divide function
+extern uint8_t maskType; // for Loop/divide function
 
 #define SEQ_PRESCALER_MASK 	0x03
 #define MIDI_PRESCALER_MASK	0x04
@@ -1061,7 +1062,8 @@ void seq_sendStepInfoToFront(uint16_t stepNr)
 //-------------------------------------------------------------------------------
 void seq_setRoll(uint8_t voice, uint8_t onOff)
 {
-	if(voice >= 7) return;
+
+	if(voice >= 7) return;  
 
 	if(onOff) {
 		seq_rollState |= (1<<voice);
@@ -1684,7 +1686,59 @@ void seq_setRandomPatternFill(uint8_t voiceNr)
 	*/
 		
 
-
-
-
+//-------------------------------------------------------------------------------
+void seq_setLoopDivide(uint8_t maskType)
+{
+uint8_t step;
+//int i;
+	
+// rstephane modification for the LOOP/DIVID Effect 
+// we will be able to change the loop length from the step sequence button (8 to 15).
+ 
+	if(maskType < 8) return;  // error :-)
+		
+	step= maskType+1;
+	switch(step)
+	{	
+		case 9 :
+			armDivide=8;
+			armDivideOnOff = 1;
+			break;
+		case 10 : 
+			armDivide=12;
+			armDivideOnOff = 1;
+			break;
+		case 11 :
+			armDivide=14;
+			armDivideOnOff = 1;
+			break;
+		case 12 : 
+			armDivide=16;
+			armDivideOnOff = 1;
+			break;
+		case 13 : 
+			armDivide = 0; 
+			armDivideOnOff = 0;
+			seq_setLoopLength(8);
+			break;
+		case 14 : 
+			armDivide = 0; 
+			armDivideOnOff = 0;
+			seq_setLoopLength(4);
+			break;
+		case 15 : 
+			armDivide = 0; 
+			armDivideOnOff = 0;	
+			seq_setLoopLength(2);					
+			break;
+		case 16 : 
+			armDivide = 0; 
+			armDivideOnOff = 0;
+			seq_setLoopLength(1);					
+			break;
+		default: 
+			break;
+		break;	
+	}	
+};				
 

@@ -205,10 +205,10 @@ const Name valueNames[NUM_NAMES] PROGMEM =
 		{SHORT_PREFILLED_PATTERN,CAT_PATTERN,	LONG_PREFILLED_PATTERN},// rstephane:  TEXT_PREFILLED_PATTERN
 		{SHORT_RANDOMFILL_PATTERN,CAT_PATTERN,	LONG_RANDOMFILL_PATTERN},// rstephane:  TEXT_RANDOMFILL_PATTERN
 		
-		{SHORT_DIVIDE,	CAT_EMPTY,	LONG_DIVIDE},	// rstephane:  TEXT_DIVIDE
-		{SHORT_LOOP,	CAT_EMPTY,	LONG_LOOP},	// rstephane:  TEXT_LOOP
-		{SHORT_OTO,CAT_EMPTY,LONG_OTO},// rstephane:  TEXT_OTO
-		{SHORT_OTO_AMOUNT,CAT_EMPTY,LONG_OTO_AMOUNT},// rstephane:  TEXT_OTO	
+		{SHORT_FX1,CAT_EMPTY,LONG_FX1},// rstephane:  TEXT_OTO
+		{SHORT_FX1_AMOUNT,CAT_EMPTY,LONG_FX1_AMOUNT},// rstephane:  TEXT_OTO	
+		{SHORT_FX2,CAT_EMPTY,LONG_FX2},// rstephane:  TEXT_OTO
+		{SHORT_FX2_AMOUNT,CAT_EMPTY,LONG_FX2_AMOUNT},// rstephane:  TEXT_OTO	
 		
 		// rstephane : Alien Wah
 		{SHORT_ALIEN_DELAY,CAT_EMPTY,LONG_ALIEN_DELAY},
@@ -484,11 +484,11 @@ const enum Datatypes PROGMEM parameter_dtypes[NUM_PARAMS] = {
 	/*PAR_RND_MASKTYPE6,*/		DTYPE_1B16,  
  
  
-	    /*PAR_LOOP*/	DTYPE_1B16,  // rstephane : loop 16 to 1 steps
-	    /*PAR_DIVIDE*/	DTYPE_1B16,  // rstephane : Starts 1 to 16 steps
+	    /*PAR_FX1_AMOUNT*/	DTYPE_0B127,  // rstephane : FX1  amounts
+	    /*PAR_FX1 */	DTYPE_1B16,  // rstephane : FX1  mode
 	   
-	    /*PAR_OTO*/		DTYPE_1B16,  // rstephane : OTO MODE
-	    /*PAR_OTO_AMOUNT*/	DTYPE_0B127,// rstephane : amount
+	    /*PAR_FX2 */		DTYPE_1B16,  // rstephane : MODE for effects 2
+	    /*PAR_FX2_AMOUNT */	DTYPE_0B127,// rstephane : amount
 	    
 	    // rstephane : Prefilled Pattern
 	    /*PAR_PREFILLED_PATTERN1*/	DTYPE_0B127,

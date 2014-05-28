@@ -57,7 +57,8 @@ float distortion_calcSampleFloat(const Distortion *dist, float x);
 // rstephane 
 
 float calcRange(uint8_t valueAmount, float old_min ,float old_max,float new_min,float new_max );
-void calcOTOFxBlock(uint8_t maskType, int16_t* buf,const uint8_t size,uint8_t otoAmount);
+void calcFx1Block(uint8_t maskType, int16_t* buf,const uint8_t size,uint8_t fxAmount);
+void calcFx2Block(uint8_t maskType, int16_t* buf,const uint8_t size,uint8_t fxAmount);
 void calcAlienWahFxBlock(uint8_t freq,uint8_t startphase,uint8_t fb,int8_t delay, int16_t* buf,const uint8_t size);
 float BassBoost(float sample);
 

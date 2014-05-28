@@ -318,9 +318,9 @@ const char shortNames[][4] PROGMEM  =
 
 	{"pat"}, // rstephane: PAT number 
 	{"rpf"}, // rstephane: RANDOM Pattern steps Fill
-	{"sta"}, // rstephane: start (divide effect) loop index
-	{"end"}, // rstephane: loop Lenght
-	{"oto"}, // rstephane: OTO mode
+	{"fx1"}, // rstephane: start (divide effect) loop index
+	{"amt"}, // rstephane: loop Lenght
+	{"fx2"}, // rstephane: OTO mode
 	{"amt"}, // rstephane: OTO amount
 	
 	{"dly"}, // rstephane: Alien Wah

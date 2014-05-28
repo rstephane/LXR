@@ -395,10 +395,10 @@ enum
 	CC2_RND_MASKTYPE6,
  
 	
-	CC2_LOOP, // my funtion LOOP is called 
-	CC2_DIVIDE, // my funtion DIVIDE is called 
-	CC2_OTO, // my funtion OTO is called 
-	CC2_OTO_AMOUNT, // AMOUNT
+	CC2_FX1_AMOUNT, // FX1 modes
+	CC2_FX1, // FX1 Amount
+	CC2_FX2, // FX2 
+	CC2_FX2_AMOUNT, // AMOUNT
 	
 	CC2_PREFILLED_PATTERN1, // my funtion PREFILLED is called 
 	CC2_PREFILLED_PATTERN2, // my funtion PREFILLED is called 

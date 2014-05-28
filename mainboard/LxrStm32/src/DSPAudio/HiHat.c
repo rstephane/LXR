@@ -44,9 +44,11 @@
 
 // rstephane  ---------
 #include "valueShaper.h"
-extern uint8_t maskType; // 0-16 for OTO effects
-extern uint8_t otoAmount; // 0-16 for OTO effects
 
+extern uint8_t fx1MaskType; // 0-16 for effects 1
+extern uint8_t fx1Amount; // amount for effects 1
+extern uint8_t fx2MaskType; // 0-16 for effects 2
+extern uint8_t fx2Amount; // amount for effects 2
 
 
 HiHatVoice hatVoice;
@@ -189,10 +191,16 @@ void HiHat_calcSyncBlock(int16_t* buf, const uint8_t size)
 	//calc transient sample
 	transient_calcBlock(&hatVoice.transGen,mod1,size);
 	
+	// --------------------------------------------------
 	//rstephane: OTO effect alike ;-)
-  	if (maskType>0)
-  		calcOTOFxBlock(maskType,buf, size,otoAmount);
- 	
+  		if (fx1MaskType>0)
+  			calcFx1Block(fx1MaskType,buf, size,fx1Amount);
+ 		
+ 	// other fx :-)
+ 		if (fx2MaskType>0)
+  			calcFx2Block(fx2MaskType,buf, size,fx2Amount);
+ 
+  	
 
 
 	uint8_t j;

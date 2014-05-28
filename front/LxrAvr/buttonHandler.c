@@ -585,7 +585,22 @@ static void buttonHandler_seqButtonPressed(uint8_t seqButtonPressed)
 				//turn button led on
 				led_setValue(1, ledNr);
 			} else {
-				/*
+				// rstephane
+				//--- buttons 8-16 initiate a Loop/divide
+			
+				//---------------------------------------------------------------------------------
+				// rstephane
+				// someone click on a step that is above 7 :-) 
+				// we catch the step value and if > 7 we execute the
+				// the LOOP/DIVIDE function :-) HACK 
+				frontPanel_sendData(SEQ_CC, SEQ_ROLL_ON_OFF,
+						(uint8_t) ((seqButtonPressed & 0xf) + 0x10));
+				//turn button led on
+				led_setValue(1, ledNr);
+				// end
+				
+				/* Below Previous commented code :-) rstephane
+				
 				 //moved pattern select to select buttons
 				 //pattern
 
@@ -652,7 +667,16 @@ static void buttonHandler_seqButtonReleased(uint8_t seqButtonPressed)
 			frontPanel_sendData(SEQ_CC, SEQ_ROLL_ON_OFF, (seqButtonPressed & 0xf));
 			//turn button led off
 			led_setValue(0, ledNr);
+		} else {
+				// rstephane
+				//--- buttons 8-16 initiate a Loop/divide
+				// so we need to clear them ! HACK
+				//turn roll off
+			frontPanel_sendData(SEQ_CC, SEQ_ROLL_ON_OFF, (seqButtonPressed & 0xf));
+			//turn button led off
+			led_setValue(0, ledNr);
 		}
+			
 		break;
 
 		//--- unused (maybe lfo clock sync? ---
